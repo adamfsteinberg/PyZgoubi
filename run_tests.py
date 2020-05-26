@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 import tempfile
 import shutil
 import os
@@ -64,9 +64,9 @@ print "installing to", install_dir
 print >> log, "installing to", install_dir
 #install_res = os.system("python setup.py install --prefix=%s"%install_dir)
 #subprocess.Popen(["./setup.py", "clean", "--all"])
-clean_proc = subprocess.Popen(["python", "./setup.py", "clean", "--all"], stdout=log, stderr=subprocess.STDOUT)
+clean_proc = subprocess.Popen(["python2", "./setup.py", "clean", "--all"], stdout=log, stderr=subprocess.STDOUT)
 clean_proc.wait()
-install_res = subprocess.Popen(["python", "./setup.py", "install", "--single-version-externally-managed", "--prefix=%s"%install_dir], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+install_res = subprocess.Popen(["python2", "./setup.py", "install", "--single-version-externally-managed", "--prefix=%s"%install_dir], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
 for line in install_res.communicate()[0].split('\n'):
 	print >>log, line
