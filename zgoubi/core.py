@@ -544,7 +544,7 @@ class Line(object):
 
 		return result
 	
-	def track_bunch(self, bunch, binary=False, **kwargs):
+	def track_bunch(self, bunch, binary=False, keep_result=False, **kwargs):
 		"Track a bunch through a Line, and return the bunch. This function will uses the OBJET_bunch object, and so need needs a Line that does not already have a OBJET. If binary is true then particles are sent to zgoubi in binary (needs a version of zgoubi that supports this)"
 		if self.full_line:
 			raise BadLineError("If line already has an OBJET use run()")
@@ -570,7 +570,12 @@ class Line(object):
 		done_bunch_len = len(done_bunch)
 		if bunch_len != done_bunch_len:
 			zlog.warn("Started with %s particles, finished with %s", bunch_len, done_bunch_len)
-		result.clean()
+		if keep_result:
+			# Need to explicitly add to self because new_line was run
+			# Can't be a weakref, but needs to act like one, e.g. be a callable
+			self.results.append(lambda :result)
+		else:
+			result.clean()
 		return done_bunch
 		
 	def track_bunch_mt(self, bunch, n_threads=4, max_particles=None, binary=False, **kwargs):
