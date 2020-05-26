@@ -364,6 +364,8 @@ class Line(object):
 		"Check that line has OBJET or MCOBJET at the start, and an END at the end. Gives warnings otherwise. Called by run() if in debug mode."
 		has_end = False
 		line_good = True
+		has_particul = False
+		has_electric = False
 		for n, element in enumerate(self.elements()):
 			if has_end:
 				line_good = False
@@ -378,6 +380,10 @@ class Line(object):
 					isobjet = True
 				if element._zgoubi_name == "END":
 					has_end = True
+				if element._zgoubi_name == "PARTICUL":
+					has_particul = True
+				if element._zgoubi_name in ["ELMULT", "CAVITE"]:
+					has_electric = True
 			except AttributeError:
 				pass
 
@@ -395,9 +401,13 @@ class Line(object):
 			zlog.warn("No END element found")
 			line_good = False
 
+		if has_electric and not has_particul:
+			zlog.warn("Electric element found, but no PARTICUL to define mass and charge")
+			line_good = False
+
 		return line_good
-				
-	
+
+
 	def full_tracking(self, enable=True, drift_to_multi=False):
 		"""Enable full tracking on magnetic elements.
 		This works by setting IL=2 for any element with an IL parameter.
