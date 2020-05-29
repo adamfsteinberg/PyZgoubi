@@ -316,6 +316,16 @@ makecommands_zpop=["make MakeFiles/Makefile_zpop_gfortran"],
 includes={"MXSTEP":10000},
 )
 
+zgoubi_versions["1451"] = dict(svnr=1451,
+patches=[
+"http://www.hep.man.ac.uk/u/samt/pyzgoubi/zgoubipatches/build_tweaks_r1451.diff",
+],
+makecommands=["make"],
+makecleancommands=["make clean"],
+makecommands_zpop=["make MakeFiles/Makefile_zpop_gfortran"],
+includes={"MXSTEP":10000},
+)
+
 zgoubi_versions["6.0.1"] = dict(svntag="zgoubi-6.0.1",
 patches=[
 "http://www.hep.man.ac.uk/u/samt/pyzgoubi/zgoubipatches/build_tweaks_r558.diff",
