@@ -566,6 +566,7 @@ class Line(object):
 		#build a line with the bunch OBJET and segment we were passed
 		new_line = Line("bunch_line")
 		new_line.add(OBJET_bunch(bunch, binary=binary))
+		new_line.add(PARTICUL(M=bunch.mass/1e6, Q=-ELECTRON_CHARGE*bunch.charge))
 		new_line.add(self)
 		#mark the faiscnl that we are interested in
 		new_line.add(MARKER("trackbun"))
