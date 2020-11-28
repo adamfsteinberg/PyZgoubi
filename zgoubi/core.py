@@ -364,6 +364,8 @@ class Line(object):
 		"Check that line has OBJET or MCOBJET at the start, and an END at the end. Gives warnings otherwise. Called by run() if in debug mode."
 		has_end = False
 		line_good = True
+		has_particul = False
+		has_electric = False
 		for n, element in enumerate(self.elements()):
 			if has_end:
 				line_good = False
@@ -378,6 +380,10 @@ class Line(object):
 					isobjet = True
 				if element._zgoubi_name == "END":
 					has_end = True
+				if element._zgoubi_name == "PARTICUL":
+					has_particul = True
+				if element._zgoubi_name in ["ELMULT", "CAVITE"]:
+					has_electric = True
 			except AttributeError:
 				pass
 
@@ -395,9 +401,13 @@ class Line(object):
 			zlog.warn("No END element found")
 			line_good = False
 
+		if has_electric and not has_particul:
+			zlog.warn("Electric element found, but no PARTICUL to define mass and charge")
+			line_good = False
+
 		return line_good
-				
-	
+
+
 	def full_tracking(self, enable=True, drift_to_multi=False):
 		"""Enable full tracking on magnetic elements.
 		This works by setting IL=2 for any element with an IL parameter.
@@ -544,7 +554,7 @@ class Line(object):
 
 		return result
 	
-	def track_bunch(self, bunch, binary=False, **kwargs):
+	def track_bunch(self, bunch, binary=False, keep_result=False, **kwargs):
 		"Track a bunch through a Line, and return the bunch. This function will uses the OBJET_bunch object, and so need needs a Line that does not already have a OBJET. If binary is true then particles are sent to zgoubi in binary (needs a version of zgoubi that supports this)"
 		if self.full_line:
 			raise BadLineError("If line already has an OBJET use run()")
@@ -556,6 +566,7 @@ class Line(object):
 		#build a line with the bunch OBJET and segment we were passed
 		new_line = Line("bunch_line")
 		new_line.add(OBJET_bunch(bunch, binary=binary))
+		new_line.add(PARTICUL(M=bunch.mass/1e6, Q=-ELECTRON_CHARGE*bunch.charge))
 		new_line.add(self)
 		#mark the faiscnl that we are interested in
 		new_line.add(MARKER("trackbun"))
@@ -570,7 +581,12 @@ class Line(object):
 		done_bunch_len = len(done_bunch)
 		if bunch_len != done_bunch_len:
 			zlog.warn("Started with %s particles, finished with %s", bunch_len, done_bunch_len)
-		result.clean()
+		if keep_result:
+			# Need to explicitly add to self because new_line was run
+			# Can't be a weakref, but needs to act like one, e.g. be a callable
+			self.results.append(lambda :result)
+		else:
+			result.clean()
 		return done_bunch
 		
 	def track_bunch_mt(self, bunch, n_threads=4, max_particles=None, binary=False, **kwargs):

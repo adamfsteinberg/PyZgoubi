@@ -15,7 +15,8 @@ CAVITE
 IOPT : E
 !IOPT==0
 X, X : 2E
-!IOPT==1	
+X, X : 2E
+!IOPT==1
 L, h : 2E
 V, X : 2E
 !IOPT==2
