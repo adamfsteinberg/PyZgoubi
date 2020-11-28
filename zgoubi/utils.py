@@ -1174,7 +1174,7 @@ def get_twiss_profiles(line, file_result=None, input_twiss_parameters=None, calc
 							mu_z_list.append(n_pi_z*2*pi-acos(sqrt(beta_z_0/beta_z)*R33_list[i]-alpha_z_0*R34_list[i]/(beta_z*beta_z_0)**0.5))
 					except ValueError:
 						zlog.warn("Failed to calculate mu_z at i=%s"%i)
-						mu_y_list.append(0.0)
+						mu_z_list.append(0.0)
 
 				alpha_z_list.append(-R33_list[i]*R43_list[i]*beta_z_0 + (R33_list[i]*R44_list[i]+R34_list[i]*R43_list[i])*alpha_z_0 \
 					- R34_list[i]*R44_list[i]*gamma_z_0)
