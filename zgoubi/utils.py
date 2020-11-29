@@ -2218,6 +2218,6 @@ def uniquify_labels(line):
 				if len(new_lab1) > max_label:
 					raise ValueError("Renaming '%s' to '%s' exceeds label length %s"%(lab1, new_lab1, max_label))
 				label1s[lab1] += 1
-				new_e.set(label1 = new_lab1)
+				new_e.label1 = new_lab1
 		new_line.add(new_e)
 	return new_line

@@ -171,7 +171,7 @@ class LabPlotElement(object):
 
 			self.sub_boundaries = []
 			if self.element_type in ["DIPOLES", "FFAG"]:
-				for sub_element in self.z_element._looped_data:
+				for sub_element in self.z_element.subelements:
 					e = radians(sub_element["ACN"] - sub_element["OMEGA_E"])
 					s = radians(sub_element["ACN"] - sub_element["OMEGA_S"])
 					ea = sub_element["THETA_E"]
