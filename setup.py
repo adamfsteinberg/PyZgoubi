@@ -31,15 +31,6 @@ if not ( "--help" in sys.argv):
 		vfile.write("MAIN_VERSION = '%s'\n"%MAIN_VERSION)
 		vfile.close()
 
-		# generate definitions
-		print "generating definitions "
-		from zgoubi import makedefs
-		shutil.copyfile(os.path.join("defs","static_defs.py"), os.path.join("zgoubi","static_defs.py"))
-
-		makedefs.make_element_classes([os.path.join("defs","simple_elements.defs")],os.path.join("zgoubi","simple_defs.py"))
-
-
-
 
 setup(name='pyzgoubi',
 	version=MAIN_VERSION,

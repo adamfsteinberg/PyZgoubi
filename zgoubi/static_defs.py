@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 import os.path
-from zgoubi.core import zgoubi_element
+from zgoubi.elements import zgoubi_element, PARTICUL
 from zgoubi.constants import *
 import copy
+
+__all__ = ["OBJET1", "OBJET2", "OBJET3", "OBJET_bunch", "OBJET5",
+"MCOBJET3", "zgoubi_particul", "ELECTRON", "PROTON", "MUON",
+"IMMORTAL_MUON", "IMMORTAL_PION", "CHANGREF_NEW", "SPNTRK", "FAKE_ELEM"]
 
 nl="\n"
 
@@ -316,7 +320,6 @@ class MCOBJET3(zgoubi_element):
 # define some useful particles
 # constants defined in zgoubi_constants.py
 
-from simple_defs import PARTICUL
 class zgoubi_particul(PARTICUL):
 	def __neg__(self):
 		"Return an anti-particle, by inverting charge"

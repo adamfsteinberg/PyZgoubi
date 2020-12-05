@@ -62,7 +62,7 @@ from zgoubi.common import *
 from zgoubi.exceptions import *
 import zgoubi.io as io
 import zgoubi.bunch
-
+from zgoubi.elements import *
 
 from zgoubi.settings import zgoubi_settings
 
@@ -85,39 +85,6 @@ home = os.path.expanduser('~')
 config_dir = os.path.join(home, ".pyzgoubi")
 if not os.path.exists(config_dir):
 	os.mkdir(config_dir)
-
-def_cache_dir = os.path.join(config_dir, "def_cache")
-if not os.path.exists(def_cache_dir):
-	os.mkdir(def_cache_dir)
-
-compiled_defs_path = os.path.join(def_cache_dir, "user_defs.py")
-
-definitions_paths = [os.path.join(config_dir, x) for x in os.listdir(config_dir) if x.endswith('.defs')]
-definitions_paths += zgoubi_settings['extra_defs_files']
-nl = '\n'
-
-#if needed recompile defs
-if not os.path.exists(compiled_defs_path):
-	zlog.debug("no compiled defs. compiling")
-	need_def_compile = True
-else:
-	need_def_compile = False
-	for f in definitions_paths:
-		if not os.path.exists(f):
-			zlog.error("Definitions file: "+f+" does not exist")
-		if os.path.exists(f) and os.path.getmtime(f) >= os.path.getmtime(compiled_defs_path):
-			zlog.debug("need to recompile"+ f)
-			need_def_compile = True
-	if not need_def_compile: # also need to recompile after a install or update
-		for f in pyzgoubi_egg_path:
-			if os.path.exists(f) and os.path.getmtime(f) >= os.path.getmtime(compiled_defs_path):
-				zlog.debug("pyzgoubi first run, compiling defs")
-				need_def_compile = True
-				break
-if need_def_compile:
-	from zgoubi import makedefs
-	zlog.debug("Compiling definitions")
-	makedefs.make_element_classes(definitions_paths, compiled_defs_path)
 
 max_label_size = zgoubi_settings["max_label_size"]
 
@@ -143,108 +110,6 @@ def read_n_lines(fh, n):
 		lines.append(fh.readline())
 	return lines
 
-# a base class for all the beam line objects
-class zgoubi_element(object):
-	"A base class for zgoubi elements"
-	def __init__(self):
-		pass
-	
-	def set(self, *dsettings, **settings):
-		"""Set a parameter value::
-			my_element.set(XL=5)
-
-		can also use a dictionary to set values::
-			s = {'XL':5, B_0=0.2}
-			my_element.set(s)
-		
-		"""
-		#try to merge the two dicts
-		try:
-			settings.update(dsettings[0])
-		except IndexError:
-			pass
-			
-		for key, val in settings.items():
-			#self.__setattr__(key,val)
-			if key in self._params.keys():
-				self._params[key] = val
-			else:
-				raise ValueError("no such param: '" + str(key) + "' In element " + self._zgoubi_name)
-	def get(self, key):
-		"Get a parameter"
-		return self._params[key]
-
-	#FIXME investigae if these would be faster as staticmethods
-	def f2s(self, f):
-		"format float for printing"
-		#out = "%e" % float(f)
-		#out = "%s" % float(f)
-		out = "%.12e" % float(f)
-		return out
-		
-	def i2s(self, i):
-		"format integer for printing"
-		out = str(int(i))
-		return out
-
-	def l2s(self, l):
-		"format label for printing"
-		out = l[:max_label_size]
-		return out
-
-	def x2s(self, i):
-		"format xpas for printing"
-		try:
-			out = self.f2s(i)
-		except TypeError:
-			out = '#'+self.i2s(i[0])+ "|"+self.i2s(i[1])+ "|"+self.i2s(i[2])
-		return out
-
-	def __getattr__(self, name):
-		"allow dot access to parameters"
-		if name != '_params':
-			try:
-				return self._params[name]
-			except KeyError:
-				pass
-		return object.__getattribute__(self, name)
-
-	def list_params(self):
-		"Return a list of parameters"
-		return list(self._params)
-	
-	def reverse(self):
-		"Flip the element along the beam line direction, i.e. the entrance and exit properties are swapped"
-		if self._zgoubi_name in  ["DIPOLES", "FFAG"]:
-			sub_swap_pairs = "G0_E,G0_S KAPPA_E,KAPPA_S NCE,NCS CE_0,CS_0 CE_1,CS_1 CE_2,CS_2 CE_3,CS_3 CE_4,CS_4 CE_5,CS_5 SHIFT_E,SHIFT_S OMEGA_E,OMEGA_S THETA_E,THETA_S R1_E,R1_S U1_E,U1_S U2_E,U2_S R2_E,R2_S"
-			for sub_element in self._looped_data:
-				for swap_pair in sub_swap_pairs.split():
-					p1, p2 = swap_pair.split(",")
-					sub_element[p1], sub_element[p2] = sub_element[p2], sub_element[p1]
-				sub_element["ACN"] = self._params["AT"] - sub_element["ACN"]
-				sub_element["OMEGA_E"] *= -1
-				sub_element["OMEGA_S"] *= -1
-				sub_element["THETA_E"] *= -1
-				sub_element["THETA_S"] *= -1
-		elif self._zgoubi_name == "CHANGREF":
-			self._params["YCE"] *= -1
-
-	def __neg__(self):
-		new_e = copy.deepcopy(self)
-		new_e.reverse()
-		return new_e
-
-	def set_plot_hint(self, **hints):
-		"Add hints to help lab_plot"
-		if not hasattr(self, "plot_hints"): self.plot_hints = {}
-		self.plot_hints.update(hints)
-
-
-
-from zgoubi.static_defs import *
-from zgoubi.simple_defs import *
-sys.path.append(os.path.join(def_cache_dir))
-from user_defs import *
 
 
 try:
@@ -253,7 +118,6 @@ except NameError:
 	zlog.error("Elements did not load correctly")
 	path_info = " zgoubi_module_path: %s\nzgoubi_path: %s\npyzgoubi_egg_path: %s" % (zgoubi_module_path, zgoubi_path, pyzgoubi_egg_path)
 	zlog.error(path_info)
-	zlog.error("Try deleting: "+static_defs+ " " +compiled_defs_path)
 	exit(1)
 
 
@@ -455,10 +319,10 @@ class Line(object):
 		"Generate the zgoubi.dat file, and return it as a string"
 		out = ""
 		if self.full_line:
-			out = self.name + nl
+			out = self.name + "\n"
 		
 		for element in self.element_list:
-			out += element.output() + nl
+			out += element.output() + "\n"
 		
 		return out
 
