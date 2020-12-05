@@ -1,6 +1,6 @@
 from zgoubi.lab_plot import LabPlot
 
-print "Drifts and bends"
+print("Drifts and bends")
 
 l = Line("lp test")
 for x in xrange(2):
@@ -34,7 +34,7 @@ for y in numpy.linspace(-10,10,10):
 	ob.add(Y=y, T=0, Z=0, P=0, D=1)
 
 tline.full_tracking(drift_to_multi=True)
-print tline
+print(tline)
 res= tline.run(xterm=0)
 ftrack = res.get_all('fai')
 ptrack = res.get_all('plt')
@@ -48,7 +48,7 @@ mkdir_p("plots")
 lp.save("plots/41-labplot_1.pdf")
 
 
-print "Drifts and bends 2"
+print("Drifts and bends 2")
 
 l = Line("lp test")
 for x in xrange(2):
@@ -82,7 +82,7 @@ for y in numpy.linspace(-10,10,10):
 	ob.add(Y=y, T=0, Z=0, P=0, D=1)
 
 tline.full_tracking(drift_to_multi=True)
-print tline
+print(tline)
 res= tline.run(xterm=0)
 ftrack = res.get_all('fai')
 ptrack = res.get_all('plt')
@@ -96,7 +96,7 @@ mkdir_p("plots")
 lp.save("plots/41-labplot_2.pdf")
 
 
-print "DIPOLE"
+print("DIPOLE")
 
 l = Line("lp test")
 ref_rid = -ke_to_rigidity(10e6, ELECTRON_MASS)
@@ -154,7 +154,7 @@ for y in numpy.linspace(-10,10,10):
 	ob.add(Y=y, T=0, Z=0, P=0, D=1)
 
 tline.full_tracking(drift_to_multi=True)
-print tline
+print(tline)
 res= tline.run(xterm=0)
 ftrack = res.get_all('fai')
 ptrack = res.get_all('plt')
@@ -168,7 +168,7 @@ mkdir_p("plots")
 lp.save("plots/41-labplot_3.pdf")
 
 
-print "FFAG"
+print("FFAG")
 
 l = Line("lp test")
 ref_rid = -ke_to_rigidity(10e6, ELECTRON_MASS)
@@ -236,7 +236,7 @@ for y in numpy.linspace(-10,10,10):
 	ob.add(Y=y, T=0, Z=0, P=0, D=1)
 
 #tline.full_tracking(False, drift_to_multi=False)
-print tline
+print(tline)
 res= tline.run(xterm=0)
 ftrack = res.get_all('fai')
 ptrack = res.get_all('plt')
@@ -250,7 +250,7 @@ mkdir_p("plots")
 lp.save("plots/41-labplot_4.pdf")
 
 
-print "FFAG 2"
+print("FFAG 2")
 
 l = Line("lp test")
 ref_rid = -ke_to_rigidity(10e6, ELECTRON_MASS)

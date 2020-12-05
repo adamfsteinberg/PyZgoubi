@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 "Module to handle reading and writing of Zgoubi files"
 
+from __future__ import division, print_function
 import numpy
 import csv
 import hashlib
@@ -138,7 +139,7 @@ def define_file(fname, allow_lookup=False):
 		header_length += 4*8 # extra bytes from record lengths
 		fh.seek(header_length)
 		record_len = struct.unpack("i", fh.read(4))[0]
-		print "record_len", record_len
+		print("record_len", record_len)
 
 	
 	signature = file_mode + file_type + header[2] + header[3] + str(record_len)
@@ -294,7 +295,7 @@ def read_file(fname):
 		#data_format = "="+"".join(types)
 
 		file_size = os.path.getsize(fname)
-		num_records = (file_size - head_len) / rec_len
+		num_records = (file_size - head_len) // rec_len
 		if num_records == 0:
 			raise EmptyFileError
 	
@@ -321,12 +322,12 @@ def store_def_all():
 	bf = define_file("binary.fai", allow_lookup=False)
 	bp = define_file("binary.plt", allow_lookup=False)
 
-	print
-	print "definition_lookup['%s'] = % s" % ( af['signature'], af)
-	print
-	print "definition_lookup['%s'] = % s" % ( bf['signature'], bf)
-	print
-	print "definition_lookup['%s'] = % s" % ( ap['signature'], ap)
-	print
-	print "definition_lookup['%s'] = % s" % ( bp['signature'], bp)
-	print
+	print()
+	print("definition_lookup['%s'] = % s" % ( af['signature'], af))
+	print()
+	print("definition_lookup['%s'] = % s" % ( bf['signature'], bf))
+	print()
+	print("definition_lookup['%s'] = % s" % ( ap['signature'], ap))
+	print()
+	print("definition_lookup['%s'] = % s" % ( bp['signature'], bp))
+	print()

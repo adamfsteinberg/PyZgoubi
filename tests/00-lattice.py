@@ -6,14 +6,14 @@ def check(line, types, names):
 		el_types.append(el._zgoubi_name)
 		el_names.append(el.label1)
 
-	print line
-	print el_types
-	print types
+	print(line)
+	print(el_types)
+	print(types)
 	assert(el_types == types)
-	print el_names
-	print names
+	print(el_names)
+	print(names)
 	assert(el_names == names)
-	print
+	print()
 
 
 

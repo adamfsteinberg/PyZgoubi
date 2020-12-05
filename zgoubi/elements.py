@@ -20,6 +20,7 @@
 
 # a base class for all the beam line objects
 
+from __future__ import division, print_function
 import zgoubi_metadata.elements
 from numbers import Number
 

@@ -4,7 +4,7 @@ for particle in ['e', 'p']:
 		laps=200
 		if energy == 1e3 and particle == 'p':
 			laps=20000 # do a long test for 1 set up
-		print particle, energy, "eV"
+		print(particle, energy, "eV")
 		make_line('line')
 		if particle == 'e':
 			mass = ELECTRON_MASS
@@ -13,7 +13,7 @@ for particle in ['e', 'p']:
 		gamma = (energy + mass) / mass
 		beta = sqrt(1-1/(gamma**2))
 
-		print gamma, beta
+		print(gamma, beta)
 
 		ob = OBJET2()
 		ob.set(BORO=-ke_to_rigidity(energy, mass))

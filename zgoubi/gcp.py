@@ -1,4 +1,4 @@
-from __future__ import division
+from __future__ import division, print_function
 import numpy
 from zgoubi.core import *
 from zgoubi.constants import *
@@ -217,7 +217,7 @@ def get_cell_properties(cell, min_ke, max_ke=None, ke_steps=1, particle=None, to
 		orbit_data['stable_tm_YT'][n] = False
 		orbit_data['stable_tm_ZP'][n] = False
 		orbit_data['stable'][n] = False
-		print "closed orbit, energy = ", particle_ke
+		print("closed orbit, energy = ", particle_ke)
 		rigidity = ke_to_rigidity(particle_ke,mass) / charge_sign
 		ob.set(BORO=rigidity)
 		good_cos = (orbit_data['found_co']*1).sum()
@@ -246,7 +246,7 @@ def get_cell_properties(cell, min_ke, max_ke=None, ke_steps=1, particle=None, to
 			zlog.warn("No closed orbit at: %s"% particle_ke)
 			if closed_orbit_debug:
 				plot_find_closed_orbit(data_fname=record_fname, outfile=record_fname+".pdf")
-				print "Search plots writen to ", record_fname+".pdf"
+				print("Search plots writen to ", record_fname+".pdf")
 			if stop_at_first_unstable: break
 
 	# get tunes and twiss
@@ -266,7 +266,7 @@ def get_cell_properties(cell, min_ke, max_ke=None, ke_steps=1, particle=None, to
 	tline.add(END())
 
 	for n, particle_ke in enumerate(ke_list):
-		print "twiss, energy = ", particle_ke
+		print("twiss, energy = ", particle_ke)
 		
 		rigidity = ke_to_rigidity(particle_ke,mass) / charge_sign
 		ob.set(BORO=rigidity)
@@ -398,7 +398,7 @@ def get_cell_properties_nonperiodic(cell, min_ke, max_ke=None, ke_steps=1, parti
 	tline.add(END())
 
 	for n, particle_ke in enumerate(ke_list):
-		print "twiss, energy = ", particle_ke
+		print("twiss, energy = ", particle_ke)
 		
 		rigidity = ke_to_rigidity(particle_ke,mass) / charge_sign
 		ob.set(BORO=rigidity)
@@ -750,7 +750,7 @@ def get_twiss_params(cell, data, particle, output_prefix="results/twiss_profiles
 
 	for n, particle_ke in enumerate(data['KE']):
 		if not data[n]['stable']: continue
-		print "energy = ", particle_ke
+		print("energy = ", particle_ke)
 		rigidity = ke_to_rigidity(particle_ke,mass) / charge_sign
 		ob.set(BORO=rigidity)
 
@@ -806,7 +806,7 @@ def plot_twiss_params(data, output_prefix="results/twiss_profiles_", fields=None
 	full_tracking_message = 0
 	for n, particle_ke in enumerate(stable_data['KE']):
 		if stable_data[n]['full_twiss_profile'] is not None:
-			print stable_data[n]['full_twiss_profile']
+			print(stable_data[n]['full_twiss_profile'])
 			twiss_profiles = stable_data[n]['full_twiss_profile']
 		elif stable_data[n]['twiss_profile'] is not None:
 			if full_tracking_message == 0:
@@ -968,7 +968,7 @@ def profile2d(magnet, min_y, max_y, y_steps, angle=0):
 	"""
 	import scipy.interpolate
 	if not hasattr(scipy.interpolate, "griddata"):
-		print "profile2d() requires scipy > 0.9"
+		print("profile2d() requires scipy > 0.9")
 		raise
 
 	field_map_data = profile_get_tracks(magnet, min_y, max_y, y_steps, angle)
@@ -1024,7 +1024,7 @@ def profile1d(magnet, min_y, max_y, y_steps, angle=0):
 	"""
 	import scipy.interpolate
 	if not hasattr(scipy.interpolate, "griddata"):
-		print "profile1d() requires scipy > 0.9"
+		print("profile1d() requires scipy > 0.9")
 		raise
 
 	field_map_data = profile_get_tracks(magnet, min_y, max_y, y_steps, angle)
@@ -1241,9 +1241,9 @@ def get_dynamic_aperture(cell, data, particle, npass, nangles=3, tol=0.01, quick
 
 	if debug_log:
 		debug_log = open(debug_log, "w")
-		print >>debug_log, "get_dynamic_aperture, npass=", npass, " nangles=", nangles, " quick_mode=", quick_mode
+		print("get_dynamic_aperture, npass=", npass, " nangles=", nangles, " quick_mode=", quick_mode, file=debug_log)
 		if data['stable'].sum() == 0:
-			print >>debug_log, "no stable orbits"
+			print("no stable orbits", file=debug_log)
 
 	min_val = 1e-10 # unstable if below
 	step = 5 # step factor when unbounded
@@ -1267,7 +1267,7 @@ def get_dynamic_aperture(cell, data, particle, npass, nangles=3, tol=0.01, quick
 			# bisect
 			cur = (bound_min + bound_max) /2
 			if cur == bound_min or cur == bound_max:
-				print "WARN: Bounds equal, machine precision reached. Reduce tolerance"
+				print("WARN: Bounds equal, machine precision reached. Reduce tolerance")
 		return cur
 
 	def update_bounds(cur, stab, bound_min, bound_max):
@@ -1276,7 +1276,7 @@ def get_dynamic_aperture(cell, data, particle, npass, nangles=3, tol=0.01, quick
 		elif not stab and (bound_max is None or bound_max > cur):
 			bound_max = cur
 		else:
-			print "WARN:  bounds unchanged", cur, stab, bound_min, bound_max, " Reduce tolerance"
+			print("WARN:  bounds unchanged", cur, stab, bound_min, bound_max, " Reduce tolerance")
 
 		return bound_min, bound_max
 	
@@ -1289,8 +1289,8 @@ def get_dynamic_aperture(cell, data, particle, npass, nangles=3, tol=0.01, quick
 		current_YTZP = emittance_to_coords(emit_h, emit_v, [alpha_y,alpha_z], [beta_y, beta_z])
 		dY, dT, dZ, dP = current_YTZP[0][0], current_YTZP[1][1], current_YTZP[0][2], current_YTZP[1][3]
 		if debug_log:
-			print >>debug_log, "cur_emit=", cur_emit, "  emit_h=", emit_h, " emit_v=", emit_v
-			print >>debug_log, "dY, dT, dZ, dP", dY, dT, dZ, dP
+			print("cur_emit=", cur_emit, "  emit_h=", emit_h, " emit_v=", emit_v, file=debug_log)
+			print("dY, dT, dZ, dP", dY, dT, dZ, dP, file=debug_log)
 
 		#print dY, dT, dZ, dP
 		ob = tline.get_objet()
@@ -1312,7 +1312,7 @@ def get_dynamic_aperture(cell, data, particle, npass, nangles=3, tol=0.01, quick
 					ob.add(Y=Yc+Ye1, T=Tc+Te1, Z=Zc+Ze1, P=Pc+Pe1, LET=chr(ord('A')+(pn%26)), D=1)
 					pn+=1
 		
-		print "DA: angle %.2f iteration %s"%(degrees(angle), it)
+		print("DA: angle %.2f iteration %s"%(degrees(angle), it))
 		res = tline.run(xterm =0)
 		
 		if res.test_rebelote(): # atlease one particle survived
@@ -1327,7 +1327,7 @@ def get_dynamic_aperture(cell, data, particle, npass, nangles=3, tol=0.01, quick
 			stab = False
 			stab_c = 0
 		if debug_log:
-			print >>debug_log, "stab=", stab, "  stab_c=", stab_c
+			print("stab=", stab, "  stab_c=", stab_c, file=debug_log)
 
 		res.clean()
 
@@ -1343,7 +1343,7 @@ def get_dynamic_aperture(cell, data, particle, npass, nangles=3, tol=0.01, quick
 		in_island = (  island-island_size < cur_emit < island+island_size  )
 		stab = (cur_emit < da and not in_island)
 		if debug_log:
-			print >>debug_log, "In island", in_island
+			print("In island", in_island, file=debug_log)
 		return stab, 16, 0
 
 	tline = Line('test_line')
@@ -1363,7 +1363,7 @@ def get_dynamic_aperture(cell, data, particle, npass, nangles=3, tol=0.01, quick
 
 	for n, particle_ke in enumerate(data['KE']):
 		if not data[n]['stable']: continue
-		print "energy = ", particle_ke
+		print("energy = ", particle_ke)
 		rigidity = ke_to_rigidity(particle_ke,mass) / charge_sign
 		ob.set(BORO=rigidity)
 		# closed orbit
@@ -1380,13 +1380,13 @@ def get_dynamic_aperture(cell, data, particle, npass, nangles=3, tol=0.01, quick
 			bound_min = None
 			bound_max = None
 			if debug_log:
-				print >>debug_log, "Start search KE=", particle_ke, " angle=", angle
+				print("Start search KE=", particle_ke, " angle=", angle, file=debug_log)
 			
 			while it<100:
 				it += 1
 				cur_emit = get_cur(cur_emit, bound_min, bound_max)
 				if debug_log:
-					print >>debug_log, "\ncur_emit=", cur_emit
+					print("\ncur_emit=", cur_emit, file=debug_log)
 
 				stab, count_p, count_s  = is_stable(cur_emit, tline, angle, it)
 
@@ -1394,10 +1394,10 @@ def get_dynamic_aperture(cell, data, particle, npass, nangles=3, tol=0.01, quick
 					# check if this is just a small unstable island
 					stab, count_p, count_s = is_stable(cur_emit*(1+island_avoid), tline, angle, it)
 					if stab:
-						print >>debug_log, "Stepped over small unstable island at", cur_emit
+						print("Stepped over small unstable island at", cur_emit, file=debug_log)
 
 				if debug_log:
-					print >>debug_log, "stab=", stab
+					print("stab=", stab, file=debug_log)
 					debug_log.flush()
 
 				bound_min, bound_max = update_bounds(cur_emit, stab, bound_min, bound_max)
@@ -1414,7 +1414,7 @@ def get_dynamic_aperture(cell, data, particle, npass, nangles=3, tol=0.01, quick
 				zlog.warn("Maximum iterations reached")
 				data[n]['DA'][an] = 0
 
-		print "DA", data[n]['DA']
+		print("DA", data[n]['DA'])
 		
 
 def get_phase_space(cell, data, particle, npass, emits=None):
@@ -1437,7 +1437,7 @@ def get_phase_space(cell, data, particle, npass, emits=None):
 	for n, particle_ke in enumerate(data['KE']):
 	#	if not data[n]['stable']: continue
 		if not data[n]['found_co']: continue
-		print "get_phase_space ke", particle_ke, "n"
+		print("get_phase_space ke", particle_ke, "n")
 		rigidity = ke_to_rigidity(particle_ke,mass) / charge_sign
 		ob = tline.get_objet()
 		ob.set(BORO=rigidity)
@@ -1466,7 +1466,7 @@ def get_phase_space(cell, data, particle, npass, emits=None):
 			try:
 				fai_data = res.get_all('fai')
 			except IOError:
-				print "No fai file"
+				print("No fai file")
 				continue
 		data[n]['phase_space'] = fai_data
 
@@ -1495,7 +1495,7 @@ def plot_dynamic_aperture(cell, data, particle, npass, output_prefix="results/da
 	for n, particle_ke in enumerate(data['KE']):
 		if not data[n]['stable']: continue
 		pyplot.clf()
-		print "energy = ", particle_ke
+		print("energy = ", particle_ke)
 		rigidity = ke_to_rigidity(particle_ke,mass) / charge_sign
 		ob = tline.get_objet()
 		ob.set(BORO=rigidity)
@@ -1510,7 +1510,7 @@ def plot_dynamic_aperture(cell, data, particle, npass, output_prefix="results/da
 		# then test a range from small to unstable
 		#for m, emit in enumerate(numpy.linspace(1e-12, 2, 20)): # linearly spaced in emittance
 		for m, emit in enumerate((numpy.linspace(1e-12, (2)**0.5, 20))**2): # linearly spaced on plot
-			print "plot_da ke", particle_ke, "n", n, "m", m
+			print("plot_da ke", particle_ke, "n", n, "m", m)
 			ob.clear()
 			# horizontal particle
 			current_YTZP = emittance_to_coords(emit*emit_h_max_stable/sqrt(2), emit*emit_h_max_stable/sqrt(2), [alpha_y,alpha_z], [beta_y, beta_z])
@@ -1532,7 +1532,7 @@ def plot_dynamic_aperture(cell, data, particle, npass, output_prefix="results/da
 				try:
 					fai_data = res.get_all('fai')
 				except IOError:
-					print "No fai file"
+					print("No fai file")
 					continue
 			tracks.append([fai_data,emit,stab])
 
@@ -1541,10 +1541,10 @@ def plot_dynamic_aperture(cell, data, particle, npass, output_prefix="results/da
 		import pickle
 		pickle.dump(tracks, open('%s_%s.pickle'%(output_prefix, particle_ke), "w"))
 
-		print "dynamic aperture", numpy.median(data[n]['DA'])
+		print("dynamic aperture", numpy.median(data[n]['DA']))
 		for fai_data,emit,stab in tracks:
 			fai_data = fai_data[fai_data["LET"]=="A"]
-			print emit, stab, len(fai_data)
+			print(emit, stab, len(fai_data))
 			stab = fai_data["PASS"].max() == npass+1
 			if stab:
 				pyplot.plot(fai_data['Y'], fai_data['T'], ',k')

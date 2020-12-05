@@ -66,7 +66,7 @@ arc4.add(qf1,d3,qd3,d3,qf3)
 quarter_ring = Line('quarter_ring')
 quarter_ring.add(d3,qf3,-arc4,arc1,arc2,arc3,qf1,d3,qd3)
 
-print quarter_ring
+print(quarter_ring)
 
 
 twissline = Line('twissline')
@@ -81,12 +81,12 @@ r = twissline.run(xterm=False)
 r.parse_matrix()
 
 tune = r.get_tune()
-print "tune", tune
+print("tune", tune)
 assert are_close( tune[0], 0.20999960, 1e-6 ) # zgoubi 261 values
 assert are_close( tune[1], 0.19500105, 1e-6 ) # zgoubi 261 values
 
 twissparam = r.get_twiss_parameters()
-print "twiss params", twissparam
+print("twiss params", twissparam)
 
 twiss_profiles = get_twiss_profiles(twissline,'twiss_profiles.txt')
 
@@ -137,13 +137,13 @@ zgoubi_data = zip(*zgoubi_data_t)
 cd = chris_data
 
 
-print "#element\tdistance\tbetah\talphah\tbetav\talphav"
+print("#element\tdistance\tbetah\talphah\tbetav\talphav")
 for n, tp in enumerate (chris_data):
 	tp = zgoubi_data[n]
 	cd = [chris_data[n][0]] + [float(x) for x in chris_data[n][1:]]
 
-	print "%s\t%s\t%s\t%s\t%s\t%s" %  (tp[0],tp[1], tp[2], tp[3],tp[4],tp[5])
-	print "%s\t%s\t%s\t%s\t%s\t%s" % tuple(cd)
+	print("%s\t%s\t%s\t%s\t%s\t%s" %  (tp[0],tp[1], tp[2], tp[3],tp[4],tp[5]))
+	print("%s\t%s\t%s\t%s\t%s\t%s" % tuple(cd))
 
 	assert are_close( tp[1], cd[1],1e-8 )
 	assert are_close( tp[2], cd[2],1e-4 )

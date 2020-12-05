@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+
+from __future__ import division, print_function
 import os.path
 from zgoubi.elements import zgoubi_element, PARTICUL
 from zgoubi.constants import *
@@ -157,7 +159,7 @@ class OBJET3(zgoubi_element):
 		elif self.FTYPE == 'formatted':
 			out += "3" + nl
 		else:
-			print "Error - specify FTYPE, formatted or unformatted"
+			print("Error - specify FTYPE, formatted or unformatted")
 			sys.exit(1)
 
 		out += i(self.IT1) +' '+ i(self.IT2) +' '+ i(self.ITStep) +nl

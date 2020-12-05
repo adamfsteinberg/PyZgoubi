@@ -22,8 +22,7 @@
 
 """
 
-
-from __future__ import division
+from __future__ import division, print_function
 from string import ascii_letters, digits
 from math import *
 import tempfile
@@ -378,7 +377,7 @@ class Line(object):
 			zlog.error("zgoubi failed to run\nIt returned:%s", exe_result)
 
 		if xterm and not self.no_more_xterm:
-			print "Do you want an xterm? (y=yes/n=no/s=stop asking)"
+			print("Do you want an xterm? (y=yes/n=no/s=stop asking)")
 			ans = raw_input()
 			if ans.startswith('y'):
 				subprocess.Popen("xterm", shell=True, cwd=tmpdir).wait()
@@ -387,7 +386,7 @@ class Line(object):
 
 		if exe_result != 0:
 			if silence:
-				print open(os.path.join(tmpdir, "zgoubi.sdterr")).read()
+				print(open(os.path.join(tmpdir, "zgoubi.sdterr")).read())
 			if exe_result == 32512:
 				raise ZgoubiRunError("Check that fortran runtime libraries are installed")
 			if exe_result == -9:
@@ -401,7 +400,7 @@ class Line(object):
 		for n, line in enumerate(open(res_file)):
 			lline = line.lower()
 			if "error" in lline or "warning" in lline or "sbr" in lline:
-				print "zgoubi.res:", n, ":", line
+				print("zgoubi.res:", n, ":", line)
 				if "SBR OBJ3 -> error in  reading  file" in line:
 					raise ZgoubiRunError(line)
 
@@ -522,9 +521,9 @@ class Line(object):
 				stop_flag.set()
 				time.sleep(2) # give the other threads a couple of seconds, to make output prettier
 				zlog.error("Exception retrieved by main thread")
-				print
+				print()
 				traceback.print_exception(*result)
-				print
+				print()
 				#reraise error message
 				raise result[0](result[1])
 			out_q.task_done()
@@ -1133,7 +1132,7 @@ class Results(object):
 			if in_particle:
 				if line.strip().startswith("I, AMQ(1,I)"):
 					break
-				print line,
+				print(line, end=' ')
 
 
 	def test_rebelote(self):
@@ -1152,7 +1151,7 @@ class Results(object):
 
 		for line in self.res_fh():
 			if "End  of  'REBELOTE'  procedure" in line:
-				print "REBELOTE completed"
+				print("REBELOTE completed")
 				return True
 		return False
 

@@ -32,13 +32,13 @@ except ImportError:
 
 
 for n, c in enumerate(zip(start[:10], end[:10])):
-	print "%s %s -> %s"%(n, list(c[0]), list(c[1]))
-	print abs((c[0] - c[1]) / numpy.maximum(c[0], c[1]))
+	print("%s %s -> %s"%(n, list(c[0]), list(c[1])))
+	print(abs((c[0] - c[1]) / numpy.maximum(c[0], c[1])))
 
 errors = abs((start - end) / numpy.maximum(start, end))
-print "%r" % errors[0][0]
-print "mean errors in YTZP"
-print errors.mean(0)
+print("%r" % errors[0][0])
+print("mean errors in YTZP")
+print(errors.mean(0))
 assert(numpy.all(errors.mean(0) < [1e-16, 2e-16, 1e-16, 2e-16, 1e-16])), "error to big"
 
 

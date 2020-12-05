@@ -30,7 +30,7 @@ emma_cell.add(DRIFT('ld', XL=ld/cm/2))
 
 
 data = gcp.get_cell_properties(cell=emma_cell, min_ke=10e6, max_ke=20e6, ke_steps=11, particle='e')
-print gcp.cell_properties_table(data, ["KE", "stable", "Y", "T", "NU_Y", "NU_Z"])
+print(gcp.cell_properties_table(data, ["KE", "stable", "Y", "T", "NU_Y", "NU_Z"]))
 
 assert(numpy.all(data['KE']/1e6 == [10,11,12,13,14,15,16,17,18,19,20])) # check energies
 assert(numpy.all(data['stable'])) # check stable
@@ -55,7 +55,7 @@ expected["NU_Z"] = [ 0.27119052,  0.238363  ,  0.21307242,  0.19273991,  0.17592
 #print data['T'].__repr__()
 
 for prop in ["Y", "T", "NU_Y", "NU_Z"]:
-	print "Checking", prop
+	print("Checking", prop)
 	max_error = (data[prop] - expected[prop]).max()
-	print "  max error", max_error
+	print("  max error", max_error)
 	assert ( max_error < 1e-8)

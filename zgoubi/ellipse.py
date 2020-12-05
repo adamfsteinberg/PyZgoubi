@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 "Algorithm by J. Scott Berg to find the smallest circle that enclose a set of ellipses that lie on the midplane."
 
+from __future__ import division, print_function
 from math import sqrt
 
 def ivl_add(l, ivl):

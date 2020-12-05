@@ -13,6 +13,7 @@ To so a list of avaliable versions run::
 
 """
 
+from __future__ import division, print_function
 import os
 import sys
 import shutil
@@ -59,18 +60,18 @@ def check_for_programs():
 def get_zgoubi_svn():
 	"Download zgoubi from SVN"
 	if os.path.isdir(zgoubi_build_dir2):
-		print "Zgoubi build folder already exists:", zgoubi_build_dir
+		print("Zgoubi build folder already exists:", zgoubi_build_dir)
 		ret = subprocess.call(['svn', 'info'], cwd=zgoubi_build_dir2)
 		if ret == 0:
-			print "Zgoubi SVN already present at:", zgoubi_build_dir
-			print "Reverting local changes"
+			print("Zgoubi SVN already present at:", zgoubi_build_dir)
+			print("Reverting local changes")
 			ret2 = subprocess.call(['svn', 'revert', '-R', '.'], cwd=zgoubi_build_dir2)
 			return
 		
 		if ret != 0 or ret2 != 0:
 			raise ZgoubiBuildError("%s already exists, but does not contain a working checkout. Please remove it."%zgoubi_build_dir)
 
-	print "Downloading Zgoubi SVN:", zgoubi_svn_address
+	print("Downloading Zgoubi SVN:", zgoubi_svn_address)
 	common.mkdir_p(zgoubi_build_dir)
 	ret = subprocess.call(['svn', 'co', zgoubi_svn_address, "zgoubi-trunk"], cwd=zgoubi_build_dir)
 	if ret != 0:
@@ -101,7 +102,7 @@ def set_zgoubi_version(version=None):
 def apply_zgoubi_patches(patches):
 	"Download and apply a set of patches"
 	for patch in patches:
-		print "applying", patch
+		print("applying", patch)
 		patchname = patch.rpartition("/")[2]
 		pf = open(os.path.join(zgoubi_build_dir2, patchname), "w")
 		try:
@@ -141,7 +142,7 @@ def edit_includes(new_params):
 					if k in new_params.keys():
 						params_d[k] = new_params[k]
 						comments.append("changed %s from %s to %s"%(k,v,new_params[k]))
-						print "in", ifile_name ,comments[-1]
+						print("in", ifile_name ,comments[-1])
 				# if a change was made write it to the file
 				if comments:
 					params_s = ",".join(["%s=%s"%(k,v) for k,v in params_d.items()])
@@ -159,7 +160,7 @@ def edit_includes(new_params):
 
 def make_zgoubi(makecommands, makecleancommands=None, threads=2):
 	"Build zgoubi source code"
-	print "building zgoubi"
+	print("building zgoubi")
 	if makecleancommands:
 		for makecleancommand in makecleancommands:
 			command = makecleancommand.split()
@@ -360,11 +361,11 @@ def install_zgoubi_all(version="6.0.2", include_opts=None):
 		build_zpop = False
 
 	if version in ['list', 'help']:
-		print "Available versions:", " ".join(zgoubi_versions.keys())
+		print("Available versions:", " ".join(zgoubi_versions.keys()))
 		exit(0)
 	if not zgoubi_versions.has_key(version):
 		raise ZgoubiBuildError("Unknown version: "+ version+ "\nTry "+ " ".join(zgoubi_versions.keys()))
-	print "Preparing to install zgoubi:", version
+	print("Preparing to install zgoubi:", version)
 	get_zgoubi_svn()
 	set_zgoubi_version(zgoubi_versions[version])
 	apply_zgoubi_patches(zgoubi_versions[version]['patches'])
@@ -385,9 +386,9 @@ def install_zgoubi_all(version="6.0.2", include_opts=None):
 
 
 	install_zgoubi("_"+version, build_zpop)
-	print "\nInstalled zgoubi into ", zgoubi_install_dir
-	print "Add the following line to ~/.pyzgoubi/settings.ini"
-	print "zgoubi_path =", os.path.join(zgoubi_install_dir, "zgoubi_"+version+exe_ext)
+	print("\nInstalled zgoubi into ", zgoubi_install_dir)
+	print("Add the following line to ~/.pyzgoubi/settings.ini")
+	print("zgoubi_path =", os.path.join(zgoubi_install_dir, "zgoubi_"+version+exe_ext))
 
 if __name__ == "__main__":
 	install_zgoubi_all()

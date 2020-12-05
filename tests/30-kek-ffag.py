@@ -97,9 +97,9 @@ rigidity = ke_to_rigidity(150e6, 938.272013e6)
 ob.set(BORO=rigidity)
 ob.add(Y=517, T=0, D=1)
 
-print ffagex.output()
+print(ffagex.output())
 res = ffagex.run(xterm = False)
-print res.res()
+print(res.res())
 res.clean()
 
 #must give reasonable initial guess at closed orbit
@@ -111,7 +111,7 @@ co2 = find_closed_orbit(ffagex, init_YTZP=[510,0,0,0], D=1.0, tol=1e-10)
 assert (co2 is not None)
 
 
-print co1
+print(co1)
 Y1, T1, Z1, P1 = co1
 Y0, T0, Z0, P0 = 4.79700585e+02, -6.44703079e-08, 0.0, 0.0 # from a zgoubi-5.0.0 run on 64bit amd Opteron
 
@@ -123,7 +123,7 @@ assert( abs((P0-P1)) < 1e-10  )
 
 
 
-print co2
+print(co2)
 Y1, T1, Z1, P1 = co2
 Y0, T0, Z0, P0 = 5.17498257e+02, -1.59120900e-07, 0.0, 0.0 # from a zgoubi-5.0.0 run on 64bit amd Opteron
 

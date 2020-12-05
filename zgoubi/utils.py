@@ -3,7 +3,7 @@
 
 #"Various useful functions and utilities"
 
-from __future__ import division
+from __future__ import division, print_function
 from math import *
 import numpy
 import sys
@@ -241,7 +241,7 @@ def show_file(file_path, mode):
 	if mode == "cat":
 		fh = open(file_path)
 		for line in fh:
-			print line,
+			print(line, end=' ')
 
 	elif mode == "less":
 		command = "less %s"% file_path
@@ -496,11 +496,11 @@ def find_closed_orbit(line, init_YTZP=None, max_iterations=100, fai_label = None
 				break
 	
 	for x in xrange(len(areas)):
-		print "it:", x, "\tYTZP", coords[x], "\tarea", areas[x], "\t laps", laps[x]
+		print("it:", x, "\tYTZP", coords[x], "\tarea", areas[x], "\t laps", laps[x])
 
 	if close_orbit_found>0:
-		print "found closed orbit"
-		print "Y=%s, T=%s, Z=%s, P=%s" % tuple(current_YTZP)
+		print("found closed orbit")
+		print("Y=%s, T=%s, Z=%s, P=%s" % tuple(current_YTZP))
 		return current_YTZP
 	else:
 		zlog.warn("Iterations did not converge, no closed orbit found")
@@ -1090,9 +1090,9 @@ def get_twiss_profiles(line, file_result=None, input_twiss_parameters=None, calc
  
 	if file_result is not None:
 		fresults = open(file_result, 'w')
-		print >> fresults, '#%8s %5s %9s %9s %9s %9s %9s %9s %9s %9s %9s %9s %9s %9s' % ("s", "label", \
+		print('#%8s %5s %9s %9s %9s %9s %9s %9s %9s %9s %9s %9s %9s %9s' % ("s", "label", \
 			"mu_y", "beta_y", "alpha_y", "gamma_y","disp_y","disp_py",\
-			"mu_z", "beta_z", "alpha_z", "gamma_z","disp_z","disp_pz")
+			"mu_z", "beta_z", "alpha_z", "gamma_z","disp_z","disp_pz"), file=fresults)
               
 	mu_y_list = []
 	beta_y_list = []
@@ -1187,22 +1187,22 @@ def get_twiss_profiles(line, file_result=None, input_twiss_parameters=None, calc
 				gamma_z_list.append(0.0)
 
 			if file_result is not None:
-				print >> fresults, '%2f %5s %9.6f %9.6f %9.6f %9.6f %9.6f %9.6f %9.6f %9.6f %9.6f %9.6f %9.6f %9.6f' % (S_alltracks[0][i], label_ref[i], \
+				print('%2f %5s %9.6f %9.6f %9.6f %9.6f %9.6f %9.6f %9.6f %9.6f %9.6f %9.6f %9.6f %9.6f' % (S_alltracks[0][i], label_ref[i], \
 					mu_y_list[i], beta_y_list[i], alpha_y_list[i], gamma_y_list[i],disp_y_list[i],disp_py_list[i],\
-					mu_z_list[i], beta_z_list[i], alpha_z_list[i], gamma_z_list[i],disp_z_list[i],disp_pz_list[i])
+					mu_z_list[i], beta_z_list[i], alpha_z_list[i], gamma_z_list[i],disp_z_list[i],disp_pz_list[i]), file=fresults)
 
 
 	except (IndexError, ZeroDivisionError, ValueError):
-		print "Error calculating twiss parameters from twiss matrix"
-		print "i=", i, "(", label[i], ")"
-		print "Matrix:"
+		print("Error calculating twiss parameters from twiss matrix")
+		print("i=", i, "(", label[i], ")")
+		print("Matrix:")
 		for ai in range(1,7):
 			for aj in range(1,7):
 				if aj == 5 or ai == 6:
-					print "-\t",
+					print("-\t", end=' ')
 					continue
-				print eval("R%s%s_list[i]"%(ai,aj)),"\t",
-			print
+				print(eval("R%s%s_list[i]"%(ai,aj)),"\t", end=' ')
+			print()
 		raise
 
 	if file_result is not None:
@@ -1479,15 +1479,15 @@ def scan_dynamic_aperture(line, emit_list_h, emit_list_v, closedorb_YTZP, npass,
 	#if emit_list is a list of decreasing emittances, looking for the first point where particle is not lost
 	reverse_search = False
 	if emit_list_h[0] > emit_list_h[-1]:
-		print "decreasing list (emit_list_h) "
+		print("decreasing list (emit_list_h) ")
 		reverse_search = True
 		
 
 	coords_YTZP_ini_list = []
 	index = 0
 	for emit_h, emit_v in zip(emit_list_h, emit_list_v):
-		print "check amplitudes (h/v pi mm mrad) ", 1e6*emit_h, 1e6*emit_v
-		print "ellipse_coords, coord_pick ",ellipse_coords, coord_pick
+		print("check amplitudes (h/v pi mm mrad) ", 1e6*emit_h, 1e6*emit_v)
+		print("ellipse_coords, coord_pick ",ellipse_coords, coord_pick)
 
 		if coord_pick is None:
 			#obtain coordinates on phase space ellipses. Use beta, alpha values found at closed orbit
@@ -1513,8 +1513,8 @@ def scan_dynamic_aperture(line, emit_list_h, emit_list_v, closedorb_YTZP, npass,
 
 		for coord_index, current_YTZP in enumerate(coords_YTZP_ini):
 
-			print "ellipse coord index ", coord_index
-			print "current coords to test ",current_YTZP
+			print("ellipse coord index ", coord_index)
+			print("current coords to test ",current_YTZP)
 
 			objet.clear()	# remove existing particles
 			objet.add(Y=current_YTZP[0], T=current_YTZP[1], Z=current_YTZP[2], P=current_YTZP[3], LET='A', D=D_mom)
@@ -1535,7 +1535,7 @@ def scan_dynamic_aperture(line, emit_list_h, emit_list_v, closedorb_YTZP, npass,
 				nc = 0
 
 			if(lost):
-				print "tracking failed at emit_h, emit_v = ", emit_h, emit_v
+				print("tracking failed at emit_h, emit_v = ", emit_h, emit_v)
 				coord_index_lost = coord_index
 				
 			if nc > 2:
@@ -1562,7 +1562,7 @@ def scan_dynamic_aperture(line, emit_list_h, emit_list_v, closedorb_YTZP, npass,
 
 
 	else:
-		print "Successful tracking in all test cases"
+		print("Successful tracking in all test cases")
 
 	if plot_data:
 
@@ -1580,7 +1580,7 @@ def scan_dynamic_aperture(line, emit_list_h, emit_list_v, closedorb_YTZP, npass,
 			
 		for ia in range(len(Y_data)):
 		    for ib in range(len(Y_data[ia])):
-		        print >>fout, ia, Y_data[ia][ib],T_data[ia][ib],Z_data[ia][ib],P_data[ia][ib]
+		        print(ia, Y_data[ia][ib],T_data[ia][ib],Z_data[ia][ib],P_data[ia][ib], file=fout)
 		fout.close()
 		    
 		plot_data_xy_multi(Y_data, Z_data, 'yz_space', labels=["YZ coords", "y [cm]", "z [cm]"], style=['k+'])
@@ -1838,7 +1838,7 @@ def get_enclosing_circle(ellipse_data):
 		bc.append((a, b, c))
 
 	(centre, radius) = bc.get_circle()
-	print 'centre of enclosing circle =', centre, ", with radius =", radius
+	print('centre of enclosing circle =', centre, ", with radius =", radius)
 
 	return centre, radius
 

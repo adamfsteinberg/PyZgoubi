@@ -6,15 +6,15 @@ my_bunch.write_YTZPSD("mybunch.dat")
 my_bunch2 = Bunch.read_YTZPSD("mybunch.dat")
 
 
-print my_bunch.particles()
-print my_bunch2.particles()
+print(my_bunch.particles())
+print(my_bunch2.particles())
 
 parts1 = my_bunch.particles()
 parts2 = my_bunch2.particles()
 
 for name in my_bunch.particles().dtype.names:
 	errors = parts2[name] - parts1[name]
-	print errors
+	print(errors)
 	assert(errors.max()<1e-15)
 
 

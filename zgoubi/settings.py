@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 "Read settings from ~/.pyzgoubi"
-from __future__ import division
+from __future__ import division, print_function
 
 import ConfigParser
 import os
@@ -45,8 +45,8 @@ if zgoubi_settings['extra_defs_files'] == ['']:
 
 zgoubi_settings['log_level'] = config.get('pyzgoubi','log_level').upper()
 if not zgoubi_settings['log_level'] in ['WARN', 'ERROR', 'DEBUG', 'INFO', 'WARNING', 'CRITICAL']:
-	print "invalid setting for log_level '%s' in settings.ini"%zgoubi_settings['log_level']
-	print "should be one of 'WARN', 'ERROR', 'DEBUG', 'INFO', 'WARNING', 'CRITICAL'"
+	print("invalid setting for log_level '%s' in settings.ini"%zgoubi_settings['log_level'])
+	print("should be one of 'WARN', 'ERROR', 'DEBUG', 'INFO', 'WARNING', 'CRITICAL'")
 	exit(2)
 
 zgoubi_settings['max_label_size'] = int(config.get('pyzgoubi', 'max_label_size'))

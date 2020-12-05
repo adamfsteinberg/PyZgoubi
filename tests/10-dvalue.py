@@ -28,7 +28,7 @@ for dval in [1, 2, 2.3, 5, 0.5]:
 
 	data = myresults.get_all('fai')
 
-	print data['D0-1'][0], dval - 1
+	print(data['D0-1'][0], dval - 1)
 	assert are_close(data['D0-1'][0],  dval - 1, 1e-15 )
 	assert are_close(data['D-1'][0],  dval - 1, 1e-15 )
 	myresults.clean()
@@ -53,7 +53,7 @@ for dval in [1, 2, 2.3, 5, 0.5]:
 
 	data2 = myresults2.get_all('fai')
 
-	print data2['D0-1']
+	print(data2['D0-1'])
 	assert data2['D0-1'].size == 10
 	assert are_close(data2['D0-1'][0],  dval - 1, 1e-15 )
 	assert are_close(data2['D0-1'][8],  dval - 1, 1e-15 )
