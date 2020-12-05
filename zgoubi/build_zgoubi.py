@@ -363,7 +363,7 @@ def install_zgoubi_all(version="6.0.2", include_opts=None):
 	if version in ['list', 'help']:
 		print("Available versions:", " ".join(zgoubi_versions.keys()))
 		exit(0)
-	if not zgoubi_versions.has_key(version):
+	if version not in zgoubi_versions:
 		raise ZgoubiBuildError("Unknown version: "+ version+ "\nTry "+ " ".join(zgoubi_versions.keys()))
 	print("Preparing to install zgoubi:", version)
 	get_zgoubi_svn()
@@ -372,7 +372,7 @@ def install_zgoubi_all(version="6.0.2", include_opts=None):
 
 	# edit any of the include files
 	include_opts_all = {}
-	if zgoubi_versions[version].has_key("includes"):
+	if "includes" in zgoubi_versions[version]:
 		include_opts_all.update(zgoubi_versions[version]["includes"])
 	include_opts_all.update(include_opts)
 	if include_opts_all:

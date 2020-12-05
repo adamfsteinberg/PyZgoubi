@@ -128,7 +128,7 @@ def define_file(fname, allow_lookup=False):
 		header = [read_fortran_record(fh) for x in range(4)]
 	
 	if header[2].startswith("..."):
-		raise OldFormatError, "This is an old format that does not define column headings"
+		raise OldFormatError("This is an old format that does not define column headings")
 
 	header_length = sum([len(h) for h in header])
 	if file_size <= header_length+8*4:
@@ -171,7 +171,7 @@ def define_file(fname, allow_lookup=False):
 
 	dupes = list(set ([x  for x in col_names if (col_names.count(x) > 1)]))
 	if dupes:
-		raise ValueError, "Duplicate columns in:" + str(fname) + "\n" + " ".join(dupes)
+		raise ValueError("Duplicate columns in:" + str(fname) + "\n" + " ".join(dupes))
 	
 	names = []
 	types = []

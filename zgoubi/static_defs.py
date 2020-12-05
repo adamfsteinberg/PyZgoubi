@@ -188,7 +188,7 @@ class OBJET_bunch(zgoubi_element):
 
 	def output(self):
 		if self.bunch is None:
-			raise BadLineError, "OBJET_bunch has no bunch set"
+			raise BadLineError("OBJET_bunch has no bunch set")
 
 		f = self.f2s
 		i = self.i2s

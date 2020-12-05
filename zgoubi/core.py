@@ -1147,7 +1147,7 @@ class Results(object):
 		#		has_reb = True
 		has_reb = 'REBELOTE' in self.element_types
 		if not has_reb:
-			raise BadLineError, "beamline need to have a REBELOTE for this function"
+			raise BadLineError("beamline need to have a REBELOTE for this function")
 
 		for line in self.res_fh():
 			if "End  of  'REBELOTE'  procedure" in line:

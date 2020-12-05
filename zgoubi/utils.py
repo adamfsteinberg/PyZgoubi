@@ -162,7 +162,7 @@ def find_centre(ellipse):
 def calc_area_simple(ellipse, centre=(0, 0)):
 	"can't handle noise. finds closest and furthest point from centre, assumes they are a and b"
 	if len(ellipse) < 2:
-		raise NoTrackError, "Not enough data points to measure area"
+		raise NoTrackError("Not enough data points to measure area")
 	distances = []
 	for point in ellipse:
 		x, y = point
@@ -291,13 +291,13 @@ def find_closed_orbit_range(line, init_YTZP=None, max_iterations=100, fai_label 
 			objet = e
 			break
 	else:
-		raise ValueError, "Line has no OBJET2 element"
+		raise ValueError("Line has no OBJET2 element")
 	
 	for e in line.element_list:
 		if ("FAISCNL" or "FAISTORE" in str(type(e)).split("'")[1]):
 			break
 	else:
-		raise ValueError, "Line has no FAISCNL element"
+		raise ValueError("Line has no FAISCNL element")
 
 	current_YTZP = numpy.array(init_YTZP)
 	objet.clear()	# remove existing particles
@@ -376,13 +376,13 @@ def find_closed_orbit(line, init_YTZP=None, max_iterations=100, fai_label = None
 			objet = e
 			break
 	else:
-		raise ValueError, "Line has no OBJET2 element"
+		raise ValueError("Line has no OBJET2 element")
 	
 	for e in line.element_list:
 		if ("FAISCNL" or "FAISTORE" in str(type(e)).split("'")[1]):
 			break
 	else:
-		raise ValueError, "Line has no FAISCNL element"
+		raise ValueError("Line has no FAISCNL element")
 	
 	if plot_search:
 		line.full_tracking(True)
@@ -639,7 +639,7 @@ def get_twiss_profiles(line, file_result=None, input_twiss_parameters=None, calc
 			has_matrix = True
 			matrix = e
 	if not (has_object5 and (has_matrix or input_twiss_parameters is not None)):
-		raise BadLineError, "beamline need to have an OBJET with kobj=5 (OBJET5), and a MATRIX elementi to get tune"
+		raise BadLineError("beamline need to have an OBJET with kobj=5 (OBJET5), and a MATRIX elementi to get tune")
 
 	#run Zgoubi
 	r = line.run(xterm = False)
@@ -1246,7 +1246,7 @@ def calc_phase_slip(line, tof_ref, del_p = 0.0001, init_YTZP = [0,0,0,0], tol_co
 			objet = e
 			break
 	else:
-		raise ValueError, "Line has no OBJET2 element"
+		raise ValueError("Line has no OBJET2 element")
 
 	closedorb_YTZP = None
 	closedorb_YTZP = find_closed_orbit(line, init_YTZP=init_YTZP, tol= tol_co, D= D*(1+del_p))
@@ -1297,13 +1297,13 @@ def fourier_tune(line, initial_YTZP, D_in, npass, plot_fourier=False, coords=Non
 			objet = e
 			break
 	else:
-		raise ValueError, "Line has no OBJET2 element"
+		raise ValueError("Line has no OBJET2 element")
 	
 	for e in line.element_list:
 		if ("FAISCNL" in str(type(e)).split("'")[1]):
 			break
 	else:
-		raise ValueError, "Line has no FAISCNL element"
+		raise ValueError("Line has no FAISCNL element")
 
 
 	#check line has a REBELOTE
@@ -1312,7 +1312,7 @@ def fourier_tune(line, initial_YTZP, D_in, npass, plot_fourier=False, coords=Non
 			reb = e
 			break
 	else:
-		raise ValueError, "Line has no REBELOTE element"
+		raise ValueError("Line has no REBELOTE element")
 
 	if coords == []:
 		objet.clear()	# remove existing particles
@@ -1422,13 +1422,13 @@ def scan_dynamic_aperture(line, emit_list_h, emit_list_v, closedorb_YTZP, npass,
 			objet = e
 			break
 	else:
-		raise ValueError, "Line has no OBJET2 element"
+		raise ValueError("Line has no OBJET2 element")
 
 	for e in line.element_list:
 		if ("FAISCNL" in str(type(e)).split("'")[1]):
 			break
 	else:
-		raise ValueError, "Line has no FAISCNL element"
+		raise ValueError("Line has no FAISCNL element")
 
 
 	#create reb so that number of passes can be set
@@ -1437,7 +1437,7 @@ def scan_dynamic_aperture(line, emit_list_h, emit_list_v, closedorb_YTZP, npass,
 			reb = e
 			break
 	else:
-		raise ValueError, "Line has no REBELOTE element"
+		raise ValueError("Line has no REBELOTE element")
 
 	rigidity = objet.BORO
 
