@@ -5,7 +5,7 @@
 Note that all values are in SI units, m, rad, eV, s
 """
 
-from __future__ import division
+from __future__ import division, print_function
 from math import *
 import numpy
 from zgoubi import rel_conv
@@ -134,9 +134,9 @@ class Bunch(object):
 		"""
 
 		if emit_y < 0 or emit_z < 0 or beta_y < 0 or beta_z < 0:
-			print "Emittance or beta can't be negative"
-			print "emit_y, emit_z, beta_y, beta_z, alpha_y, alpha_z"
-			print emit_y, emit_z, beta_y, beta_z, alpha_y, alpha_z
+			print("Emittance or beta can't be negative")
+			print("emit_y, emit_z, beta_y, beta_z, alpha_y, alpha_z")
+			print(emit_y, emit_z, beta_y, beta_z, alpha_y, alpha_z)
 			raise ValueError
 
 		npart = int(npart)
@@ -186,9 +186,9 @@ class Bunch(object):
 		"""
 
 		if emit_y < 0 or emit_z < 0 or beta_y < 0 or beta_z < 0:
-			print "Emittance or beta can't be negative"
-			print "emit_y, emit_z, beta_y, beta_z, alpha_y, alpha_z"
-			print emit_y, emit_z, beta_y, beta_z, alpha_y, alpha_z
+			print("Emittance or beta can't be negative")
+			print("emit_y, emit_z, beta_y, beta_z, alpha_y, alpha_z")
+			print(emit_y, emit_z, beta_y, beta_z, alpha_y, alpha_z)
 			raise ValueError
 
 		if seed is not None:
@@ -243,9 +243,9 @@ class Bunch(object):
 		"""
 
 		if emit_y < 0 or emit_z < 0 or beta_y < 0 or beta_z < 0:
-			print "Emittance or beta can't be negative"
-			print "emit_y, emit_z, beta_y, beta_z, alpha_y, alpha_z"
-			print emit_y, emit_z, beta_y, beta_z, alpha_y, alpha_z
+			print("Emittance or beta can't be negative")
+			print("emit_y, emit_z, beta_y, beta_z, alpha_y, alpha_z")
+			print(emit_y, emit_z, beta_y, beta_z, alpha_y, alpha_z)
 			raise ValueError
 
 		if seed is not None:
@@ -319,9 +319,9 @@ class Bunch(object):
 		"""
 
 		if emit_y < 0 or emit_z < 0 or beta_y < 0 or beta_z < 0:
-			print "Emittance or beta can't be negative"
-			print "emit_y, emit_z, beta_y, beta_z, alpha_y, alpha_z"
-			print emit_y, emit_z, beta_y, beta_z, alpha_y, alpha_z
+			print("Emittance or beta can't be negative")
+			print("emit_y, emit_z, beta_y, beta_z, alpha_y, alpha_z")
+			print(emit_y, emit_z, beta_y, beta_z, alpha_y, alpha_z)
 			raise ValueError
 
 		if seed is not None:
@@ -364,9 +364,9 @@ class Bunch(object):
 
 
 		if emit_y < 0 or emit_z < 0 or beta_y < 0 or beta_z < 0:
-			print "Emittance or beta can't be negative"
-			print "emit_y, emit_z, beta_y, beta_z, alpha_y, alpha_z"
-			print emit_y, emit_z, beta_y, beta_z, alpha_y, alpha_z
+			print("Emittance or beta can't be negative")
+			print("emit_y, emit_z, beta_y, beta_z, alpha_y, alpha_z")
+			print(emit_y, emit_z, beta_y, beta_z, alpha_y, alpha_z)
 			raise ValueError
 
 

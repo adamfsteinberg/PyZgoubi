@@ -46,28 +46,28 @@ except ImportError:
 	mt2_end = mt2_bunch.particles()[['Y', 'P', 'Z', 'T', 'D']].view(float).reshape([-1, 5])
 	mt4_end = mt4_bunch.particles()[['Y', 'P', 'Z', 'T', 'D']].view(float).reshape([-1, 5])
 
-print "%r" % st_end[0]
-print "%r" % mt2_end[0]
-print "%r" % mt4_end[0]
-print
-print "%r" % st_end[1]
-print "%r" % mt2_end[1]
-print "%r" % mt4_end[1]
+print("%r" % st_end[0])
+print("%r" % mt2_end[0])
+print("%r" % mt4_end[0])
+print()
+print("%r" % st_end[1])
+print("%r" % mt2_end[1])
+print("%r" % mt4_end[1])
 
 errors = abs((mt2_end - st_end) / numpy.maximum(mt2_end, st_end))
-print "%r" % errors[0][0]
-print "mean errors in YTZPD: single vs 2 thread"
-print errors.mean(0)
+print("%r" % errors[0][0])
+print("mean errors in YTZPD: single vs 2 thread")
+print(errors.mean(0))
 assert(numpy.all(errors.mean(0) < [1e-16, 2e-16, 1e-16, 2e-16, 1e-16])), "error to big"
 
 
 errors = abs((mt4_end - st_end) / numpy.maximum(mt4_end, st_end))
-print "%r" % errors[0][0]
-print "mean errors in YTZPD: signle vs 4 thread"
-print errors.mean(0)
+print("%r" % errors[0][0])
+print("mean errors in YTZPD: signle vs 4 thread")
+print(errors.mean(0))
 assert(numpy.all(errors.mean(0) < [1e-16, 2e-16, 1e-16, 2e-16, 1e-16])), "error to big"
 
-print "single thread:", st_time, "s"
-print "2 threads    :", mt2_time, "s"
-print "4 threads    :", mt4_time, "s"
+print("single thread:", st_time, "s")
+print("2 threads    :", mt2_time, "s")
+print("4 threads    :", mt4_time, "s")
 

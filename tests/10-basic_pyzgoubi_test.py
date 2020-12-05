@@ -27,4 +27,4 @@ fai_data =  get_all('fai') # so the data recorded with FAISCNL
 
 
 
-print "basic test suscessful"
+print("basic test suscessful")

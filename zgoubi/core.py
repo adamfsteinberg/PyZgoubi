@@ -22,8 +22,7 @@
 
 """
 
-
-from __future__ import division
+from __future__ import division, print_function
 from string import ascii_letters, digits
 from math import *
 import tempfile
@@ -106,7 +105,7 @@ def read_n_lines(fh, n):
 	"reads n lines at a time"
 
 	lines = []
-	for dummy in xrange(n):
+	for dummy in range(n):
 		lines.append(fh.readline())
 	return lines
 
@@ -177,7 +176,7 @@ class Line(object):
 
 	def __rmul__(self, lhs):
 		new_line = Line(self.name)
-		for x in xrange(lhs):
+		for x in range(lhs):
 			for element in self.element_list:
 				new_line.add(element)
 		new_line.add_input_files(self.input_files)
@@ -185,7 +184,7 @@ class Line(object):
 
 	def __mul__(self, rhs):
 		new_line = Line(self.name)
-		for x in xrange(rhs):
+		for x in range(rhs):
 			for element in self.element_list:
 				new_line.add(element)
 		new_line.add_input_files(self.input_files)
@@ -378,7 +377,7 @@ class Line(object):
 			zlog.error("zgoubi failed to run\nIt returned:%s", exe_result)
 
 		if xterm and not self.no_more_xterm:
-			print "Do you want an xterm? (y=yes/n=no/s=stop asking)"
+			print("Do you want an xterm? (y=yes/n=no/s=stop asking)")
 			ans = raw_input()
 			if ans.startswith('y'):
 				subprocess.Popen("xterm", shell=True, cwd=tmpdir).wait()
@@ -387,7 +386,7 @@ class Line(object):
 
 		if exe_result != 0:
 			if silence:
-				print open(os.path.join(tmpdir, "zgoubi.sdterr")).read()
+				print(open(os.path.join(tmpdir, "zgoubi.sdterr")).read())
 			if exe_result == 32512:
 				raise ZgoubiRunError("Check that fortran runtime libraries are installed")
 			if exe_result == -9:
@@ -401,7 +400,7 @@ class Line(object):
 		for n, line in enumerate(open(res_file)):
 			lline = line.lower()
 			if "error" in lline or "warning" in lline or "sbr" in lline:
-				print "zgoubi.res:", n, ":", line
+				print("zgoubi.res:", n, ":", line)
 				if "SBR OBJ3 -> error in  reading  file" in line:
 					raise ZgoubiRunError(line)
 
@@ -488,7 +487,7 @@ class Line(object):
 		new_line.add(FAKE_ELEM(line_output))
 
 		stop_flag = threading.Event()
-		for thread_n in xrange(n_threads):
+		for thread_n in range(n_threads):
 			t = threading.Thread(target=worker,
 			                     kwargs={'in_q':in_q, 'out_q':out_q,
 			                     'work_line':new_line, 'name':thread_n, 'stop_flag':stop_flag})
@@ -512,7 +511,7 @@ class Line(object):
 		survive_particles = numpy.zeros(len(bunch), dtype=numpy.bool) # bit map, set true when filling with particles
 
 		# workers may return out of order, so use start_index to put the coords in the correct place
-		for x in xrange(n_tasks):
+		for x in range(n_tasks):
 			#print "collecting task", x
 			result = out_q.get()
 			try:
@@ -522,9 +521,9 @@ class Line(object):
 				stop_flag.set()
 				time.sleep(2) # give the other threads a couple of seconds, to make output prettier
 				zlog.error("Exception retrieved by main thread")
-				print
+				print()
 				traceback.print_exception(*result)
-				print
+				print()
 				#reraise error message
 				raise result[0](result[1])
 			out_q.task_done()
@@ -584,7 +583,7 @@ class Line(object):
 		"""Iterate through sub lines to find element as if indexed in a flat list
 		returns [line, index_in_line]"""
 		stack = [[self, -1]]
-		for n in xrange(index+1):
+		for n in range(index+1):
 			if stack[-1][1]+1 >= len(stack[-1][0].element_list):
 				# step back up
 				stack.pop()
@@ -1012,12 +1011,12 @@ class Results(object):
 		for n, line in enumerate(matrix_lines):
 			if line == "TRANSFER  MATRIX  ORDRE  1  (MKSA units)":
 				matrix1 = numpy.zeros([6, 6])
-				for x in xrange(6):
+				for x in range(6):
 					matrix1[x] = matrix_lines[x+n+2].split()
 				parsed_info['matrix1'] = matrix1
 			if line == "Beam  matrix  (beta/-alpha/-alpha/gamma) and  periodic  dispersion  (MKSA units)":
 				twissmat = numpy.zeros([6, 6])
-				for x in xrange(6):
+				for x in range(6):
 					row = []
 					for rowe in matrix_lines[x+n+2].split():
 						try:
@@ -1133,7 +1132,7 @@ class Results(object):
 			if in_particle:
 				if line.strip().startswith("I, AMQ(1,I)"):
 					break
-				print line,
+				print(line, end=' ')
 
 
 	def test_rebelote(self):
@@ -1148,11 +1147,11 @@ class Results(object):
 		#		has_reb = True
 		has_reb = 'REBELOTE' in self.element_types
 		if not has_reb:
-			raise BadLineError, "beamline need to have a REBELOTE for this function"
+			raise BadLineError("beamline need to have a REBELOTE for this function")
 
 		for line in self.res_fh():
 			if "End  of  'REBELOTE'  procedure" in line:
-				print "REBELOTE completed"
+				print("REBELOTE completed")
 				return True
 		return False
 

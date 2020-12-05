@@ -38,27 +38,27 @@ add(END())
 #print output()
 
 res = run(xterm=False)
-print res.res()
+print(res.res())
 
 try:
 	if binary:
 		fai_data =  numpy.array(res.get_track('bfai', ['Y','T','Z','P'])) / [100, 1000, 100, 1000]
-		print type(fai_data)
+		print(type(fai_data))
 	else:
 		fai_data =  numpy.array(res.get_track('fai', ['Y','T','Z','P'])) / [100, 1000, 100, 1000]
 except:
-	print "This will fail if you do not have patch from https://sourceforge.net/tracker/?func=detail&aid=3041984&group_id=205776&atid=995005"
+	print("This will fail if you do not have patch from https://sourceforge.net/tracker/?func=detail&aid=3041984&group_id=205776&atid=995005")
 	raise
 
 
 
-print "%r"%b_orig_4d[0][0]
-print "%r"%fai_data[0][0]
+print("%r"%b_orig_4d[0][0])
+print("%r"%fai_data[0][0])
 
 errors = abs((b_orig_4d - fai_data) / numpy.maximum(b_orig_4d, fai_data))
-print "%r"%errors[0][0]
-print "mean errors in YTZP"
-print errors.mean(0)
+print("%r"%errors[0][0])
+print("mean errors in YTZP")
+print(errors.mean(0))
 assert(numpy.all(errors.mean(0) < [1e-15, 1e-15, 1e-15, 2e-15])), "error to big"
 
 

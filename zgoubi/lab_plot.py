@@ -2,7 +2,7 @@
 
 """
 
-from __future__ import division
+from __future__ import division, print_function
 from math import *
 import numpy as np
 from zgoubi.core import zlog
@@ -42,7 +42,7 @@ class LabPlotElement(object):
 
 		if self.element_type == "TOSCA":
 			if hasattr(self.z_element, "plot_hints") and "AT" in self.z_element.plot_hints:
-				print "polar"
+				print("polar")
 				# Then is is a polar TOSCA, so change type
 				self.element_type = "TOSCAp"
 			elif hasattr(self.z_element, "plot_hints") and "XL" in self.z_element.plot_hints:
@@ -133,7 +133,7 @@ class LabPlotElement(object):
 						if os.path.basename(fname) == self.z_element.FNAME:
 							self.fmap_file_path = fname
 							fmap_file = open(self.fmap_file_path)
-				for n in xrange(4): dummy = fmap_file.readline()
+				for n in range(4): dummy = fmap_file.readline()
 				phi_line = fmap_file.readline()
 				phi_line = phi_line.split()
 				self.dip_at = float(phi_line[-1])
@@ -447,7 +447,7 @@ class LabPlot(object):
 		if draw_field_midplane:
 			if field_int_mode=="griddata":
 				if not hasattr(scipy.interpolate, "griddata"):
-					print "LabPlot.draw() with field_int_mode='griddata' requires scipy > 0.9, try field_int_mode='kd'"
+					print("LabPlot.draw() with field_int_mode='griddata' requires scipy > 0.9, try field_int_mode='kd'")
 					raise
 				label = r"$B_%s$ (kG)"%field_component
 				field_map_data = np.array(self.field_map_data)

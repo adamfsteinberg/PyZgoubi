@@ -45,8 +45,8 @@ else:
 
 errors = abs((b_orig_4d - fai_data) / numpy.maximum(b_orig_4d, fai_data))
 #print errors
-print "mean errors in YTZP"
-print errors.mean(0)
+print("mean errors in YTZP")
+print(errors.mean(0))
 assert(numpy.all(errors.mean(0) < [1e-13, 2e-13, 1e-13, 2e-13])), "error to big"
 
 

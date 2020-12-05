@@ -25,18 +25,18 @@ More infomation please see the README file or the pyzgoubi website
 
 """
 
-from __future__ import division
+from __future__ import division, print_function
 from math import *
 import getopt, sys, os
 try:
 	import numpy
 except ImportError:
-	print "Numpy is required for PyZGoubi"
+	print("Numpy is required for PyZGoubi")
 	sys.exit(1)
 try:
 	eval("1 if True else 2")
 except SyntaxError:
-	print "PyZgoubi requires Python 2.5 or newer (2.7 recommended)"
+	print("PyZgoubi requires Python 2.7")
 	sys.exit(1)
 import subprocess
 from zgoubi.utils import *
@@ -99,7 +99,7 @@ def _show_help(help_arg):
 		_show_usage()
 		sys.exit(0)
 	if help_arg.lower() == "elements":
-		print "available elements"
+		print("available elements")
 		elements = []
 
 		for k, v in globals().items():
@@ -110,113 +110,113 @@ def _show_help(help_arg):
 			except TypeError:
 				pass
 		elements.sort()
-		print '\n'.join(elements)
+		print('\n'.join(elements))
 		sys.exit(0)
 
 	try:
 		# check if there is such an element
 		dummy = globals()[help_arg.upper()]
 	except KeyError:
-		print "There is no help for %s" % sys.argv[2]
+		print("There is no help for %s" % sys.argv[2])
 		sys.exit(1)
 
-	print help_arg.upper()
+	print(help_arg.upper())
 	help_elem_inst = eval("%s()" % help_arg.upper())
-	print "zgoubi name:", help_elem_inst._zgoubi_name
-	print "Parameters:"
+	print("zgoubi name:", help_elem_inst._zgoubi_name)
+	print("Parameters:")
 	params = help_elem_inst.list_params()
 	params.sort()
-	print '\n'.join(params)
+	print('\n'.join(params))
 	if hasattr(help_elem_inst, "_looped_data"):
 		help_elem_inst.add()
-		print "Sub element parameters:"
+		print("Sub element parameters:")
 		sparams = help_elem_inst._looped_data[0].keys()
 		sparams.sort()
-		print '\n'.join(sparams)
+		print('\n'.join(sparams))
 
 
 
 def _show_usage():
 	"Show some usage instructions"
-	print "Usage:"
-	print "pyzgoubi", "input_file_name"
-	print "pyzgoubi", "--help"
-	print "pyzgoubi", "--help elements\t( show avalible elements"
-	print "pyzgoubi", "--help ELEMENT\t( show element info"
-	print "pyzgoubi", "--version"
-	print "pyzgoubi", "--zgoubi /path/to/zgoubi"
-	print "pyzgoubi", "--debug"
-	print "pyzgoubi", "--log-level DEBUG/WARNING/ERROR"
-	print "pyzgoubi", "-i drop to interactive mode on exception"
-	print "pyzgoubi", "--profile write execution profile to prof.log "
-	print "pyzgoubi", "--install-zgoubi"
-	print "pyzgoubi", "--install-zgoubi list"
-	print "pyzgoubi", "--install-zgoubi version KEY=VALUE"
-	print "\nFor documentation see http://www.hep.manchester.ac.uk/u/sam/pyzgoubi/"
+	print("Usage:")
+	print("pyzgoubi", "input_file_name")
+	print("pyzgoubi", "--help")
+	print("pyzgoubi", "--help elements\t( show avalible elements")
+	print("pyzgoubi", "--help ELEMENT\t( show element info")
+	print("pyzgoubi", "--version")
+	print("pyzgoubi", "--zgoubi /path/to/zgoubi")
+	print("pyzgoubi", "--debug")
+	print("pyzgoubi", "--log-level DEBUG/WARNING/ERROR")
+	print("pyzgoubi", "-i drop to interactive mode on exception")
+	print("pyzgoubi", "--profile write execution profile to prof.log ")
+	print("pyzgoubi", "--install-zgoubi")
+	print("pyzgoubi", "--install-zgoubi list")
+	print("pyzgoubi", "--install-zgoubi version KEY=VALUE")
+	print("\nFor documentation see http://www.hep.manchester.ac.uk/u/sam/pyzgoubi/")
 
 def show_version():
 	"Output version information"
-	print "Pyzgoubi version: %s" % MAIN_VERSION
+	print("Pyzgoubi version: %s" % MAIN_VERSION)
 	try:
-		print 'Bzr: %(branch_nick)s rev %(revno)s' % version_info
+		print('Bzr: %(branch_nick)s rev %(revno)s' % version_info)
 	except NameError:
 		pass
-	print "Default Zgoubi path", zgoubi_settings['zgoubi_path']
+	print("Default Zgoubi path", zgoubi_settings['zgoubi_path'])
 	tmpdir = tempfile.mkdtemp()
 	try:
 		output = subprocess.Popen([zgoubi_settings['zgoubi_path']], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=tmpdir).communicate()[0]
 		for line in output.split('\n'):
 			if "version" in line.lower():
-				print line.strip()
+				print(line.strip())
 	except OSError:
-		print "Failed to run zgoubi"
-		print "[from settings.ini] zgoubi_path:", zgoubi_settings['zgoubi_path']
-		print "$PATH:", os.environ['PATH']
+		print("Failed to run zgoubi")
+		print("[from settings.ini] zgoubi_path:", zgoubi_settings['zgoubi_path'])
+		print("$PATH:", os.environ['PATH'])
 
 	shutil.rmtree(tmpdir)
 
-	print "Python version", sys.version
+	print("Python version", sys.version)
 	show_path = False
 
-	print "numpy version", numpy.version.version
+	print("numpy version", numpy.version.version)
 	try:
 		import scipy
-		print "scipy version", scipy.version.version
+		print("scipy version", scipy.version.version)
 	except ImportError:
-		print "No scipy"
+		print("No scipy")
 		show_path = True
 	try:
 		import matplotlib
-		print "matplotlib version", matplotlib.__version__
+		print("matplotlib version", matplotlib.__version__)
 	except ImportError:
-		print "No matplotlib"
+		print("No matplotlib")
 		show_path = True
 	except RuntimeError:
-		print "Problem loading matplotlib"
+		print("Problem loading matplotlib")
 		show_path = True
 
 	if show_path:
-		print "python sys.path", str(sys.path)
+		print("python sys.path", str(sys.path))
 
 	import platform
 	if hasattr(platform, "linux_distribution"):
 		li = platform.linux_distribution()
 		if li[0]:
-			print li[0], li[1], 
+			print(li[0], li[1], end=' ')
 	elif hasattr(platform, "dist"):
 		li = platform.dist()
 		if li[0]:
-			print li[0], li[1], 
+			print(li[0], li[1], end=' ')
 	if hasattr(platform, "win32_ver"):
 		wi = platform.win32_ver()
 		if wi[0]:
-			print "Windows", wi[0], wi[1], wi[2],
+			print("Windows", wi[0], wi[1], wi[2], end=' ')
 	if hasattr(platform, "mac_ver"):
 		mi = platform.mac_ver()
 		if mi[0]:
-			print "MacOS", mi[0], mi[1][0], mi[1][1], mi[2],
+			print("MacOS", mi[0], mi[1][0], mi[1][1], mi[2], end=' ')
 
-	print "(", " ".join(platform.uname()), ")"
+	print("(", " ".join(platform.uname()), ")")
 
 
 
@@ -224,7 +224,7 @@ if __name__ == '__main__':
 	try:
 		opts, args = getopt.getopt(sys.argv[1:], "hi", ["help", "version", "zgoubi=", "debug", "log_level=", "log-level=" ,"install-zgoubi", "profile"])
 	except getopt.GetoptError, err:
-		print str(err)
+		print(str(err))
 		_show_usage()
 		sys.exit(1)
 
@@ -274,12 +274,12 @@ if __name__ == '__main__':
 		input_file_name = args[0]
 		sys.argv.pop(0)
 	except IndexError:
-		print "No input file, try:"
-		print "pyzgoubi inputfile"
+		print("No input file, try:")
+		print("pyzgoubi inputfile")
 		sys.exit(1)
 	
 	if not os.path.exists(input_file_name):
-		print "no such input file in current directory"
+		print("no such input file in current directory")
 		sys.exit(1)
 		
 	try:
@@ -288,9 +288,9 @@ if __name__ == '__main__':
 		shutil.rmtree(tmpdir)
 	except OSError:
 		shutil.rmtree(tmpdir)
-		print "can't find zgoubi binary", zgoubi_settings['zgoubi_path']
-		print "please modify the 'zgoubi_path' entry in ~/.pyzgoubi/settings.ini to the full path of zgoubi"
-		print "or add the direcory containing zgoubi to the $PATH"
+		print("can't find zgoubi binary", zgoubi_settings['zgoubi_path'])
+		print("please modify the 'zgoubi_path' entry in ~/.pyzgoubi/settings.ini to the full path of zgoubi")
+		print("or add the direcory containing zgoubi to the $PATH")
 		sys.exit(1)
 
 	if pyzgoubi_make_profile:

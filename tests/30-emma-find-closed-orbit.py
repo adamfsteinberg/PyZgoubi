@@ -1,4 +1,4 @@
-print "running emma example"
+print("running emma example")
 
 emma = Line('emma')
 

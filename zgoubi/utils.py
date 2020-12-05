@@ -3,7 +3,7 @@
 
 #"Various useful functions and utilities"
 
-from __future__ import division
+from __future__ import division, print_function
 from math import *
 import numpy
 import sys
@@ -55,7 +55,7 @@ def coords_grid(min_c=None, max_c=None, step=None, dtype=float):
 	#assert(len(min)==2)
 	dimention = len(min_c)
 
-	stride = [(max_c[x]-min_c[x])/step[x] for x in xrange(dimention)]
+	stride = [(max_c[x]-min_c[x])/step[x] for x in range(dimention)]
 
 	indexes = numpy.zeros(step)
 
@@ -64,7 +64,7 @@ def coords_grid(min_c=None, max_c=None, step=None, dtype=float):
 	for ind, dummy in numpy.ndenumerate(indexes):
 		#print ind
 		this_coord = []
-		for x in xrange(len(ind)):
+		for x in range(len(ind)):
 			this_coord.append(stride[x] * ind[x] + min[x])
 		coords.append(this_coord)
 
@@ -162,7 +162,7 @@ def find_centre(ellipse):
 def calc_area_simple(ellipse, centre=(0, 0)):
 	"can't handle noise. finds closest and furthest point from centre, assumes they are a and b"
 	if len(ellipse) < 2:
-		raise NoTrackError, "Not enough data points to measure area"
+		raise NoTrackError("Not enough data points to measure area")
 	distances = []
 	for point in ellipse:
 		x, y = point
@@ -241,7 +241,7 @@ def show_file(file_path, mode):
 	if mode == "cat":
 		fh = open(file_path)
 		for line in fh:
-			print line,
+			print(line, end=' ')
 
 	elif mode == "less":
 		command = "less %s"% file_path
@@ -291,20 +291,20 @@ def find_closed_orbit_range(line, init_YTZP=None, max_iterations=100, fai_label 
 			objet = e
 			break
 	else:
-		raise ValueError, "Line has no OBJET2 element"
+		raise ValueError("Line has no OBJET2 element")
 	
 	for e in line.element_list:
 		if ("FAISCNL" or "FAISTORE" in str(type(e)).split("'")[1]):
 			break
 	else:
-		raise ValueError, "Line has no FAISCNL element"
+		raise ValueError("Line has no FAISCNL element")
 
 	current_YTZP = numpy.array(init_YTZP)
 	objet.clear()	# remove existing particles
 	
 	# generate bunch
 	ranges = []
-	for x in xrange(4):
+	for x in range(4):
 		if range_YTZP[x] == 0 or count_YTZP[0] <= 1:
 			ranges.append([0])
 		else:
@@ -376,13 +376,13 @@ def find_closed_orbit(line, init_YTZP=None, max_iterations=100, fai_label = None
 			objet = e
 			break
 	else:
-		raise ValueError, "Line has no OBJET2 element"
+		raise ValueError("Line has no OBJET2 element")
 	
 	for e in line.element_list:
 		if ("FAISCNL" or "FAISTORE" in str(type(e)).split("'")[1]):
 			break
 	else:
-		raise ValueError, "Line has no FAISCNL element"
+		raise ValueError("Line has no FAISCNL element")
 	
 	if plot_search:
 		line.full_tracking(True)
@@ -396,7 +396,7 @@ def find_closed_orbit(line, init_YTZP=None, max_iterations=100, fai_label = None
 	tracks = []
 	laps = []
 	close_orbit_found = 0
-	for iteration in xrange(max_iterations):
+	for iteration in range(max_iterations):
 		zlog.debug("start iteration: "+str(iteration)+ " with coords "+str(current_YTZP))
 		coords.append(current_YTZP)
 		objet.clear()	# remove existing particles
@@ -475,7 +475,7 @@ def find_closed_orbit(line, init_YTZP=None, max_iterations=100, fai_label = None
 		current_YTZP = numpy.array([centre_h[0], centre_h[1], centre_v[0], centre_v[1]])
 		
 		difs = numpy.zeros(4)
-		for x in xrange(4):
+		for x in range(4):
 			if abs(prev_YTZP[x]) < tol or abs(current_YTZP[x]) < tol:
 				difs[x] = abs(prev_YTZP[x] - current_YTZP[x])
 			else:
@@ -495,12 +495,12 @@ def find_closed_orbit(line, init_YTZP=None, max_iterations=100, fai_label = None
 			if close_orbit_found > extra_iterations:
 				break
 	
-	for x in xrange(len(areas)):
-		print "it:", x, "\tYTZP", coords[x], "\tarea", areas[x], "\t laps", laps[x]
+	for x in range(len(areas)):
+		print("it:", x, "\tYTZP", coords[x], "\tarea", areas[x], "\t laps", laps[x])
 
 	if close_orbit_found>0:
-		print "found closed orbit"
-		print "Y=%s, T=%s, Z=%s, P=%s" % tuple(current_YTZP)
+		print("found closed orbit")
+		print("Y=%s, T=%s, Z=%s, P=%s" % tuple(current_YTZP))
 		return current_YTZP
 	else:
 		zlog.warn("Iterations did not converge, no closed orbit found")
@@ -639,7 +639,7 @@ def get_twiss_profiles(line, file_result=None, input_twiss_parameters=None, calc
 			has_matrix = True
 			matrix = e
 	if not (has_object5 and (has_matrix or input_twiss_parameters is not None)):
-		raise BadLineError, "beamline need to have an OBJET with kobj=5 (OBJET5), and a MATRIX elementi to get tune"
+		raise BadLineError("beamline need to have an OBJET with kobj=5 (OBJET5), and a MATRIX elementi to get tune")
 
 	#run Zgoubi
 	r = line.run(xterm = False)
@@ -1090,9 +1090,9 @@ def get_twiss_profiles(line, file_result=None, input_twiss_parameters=None, calc
  
 	if file_result is not None:
 		fresults = open(file_result, 'w')
-		print >> fresults, '#%8s %5s %9s %9s %9s %9s %9s %9s %9s %9s %9s %9s %9s %9s' % ("s", "label", \
+		print('#%8s %5s %9s %9s %9s %9s %9s %9s %9s %9s %9s %9s %9s %9s' % ("s", "label", \
 			"mu_y", "beta_y", "alpha_y", "gamma_y","disp_y","disp_py",\
-			"mu_z", "beta_z", "alpha_z", "gamma_z","disp_z","disp_pz")
+			"mu_z", "beta_z", "alpha_z", "gamma_z","disp_z","disp_pz"), file=fresults)
               
 	mu_y_list = []
 	beta_y_list = []
@@ -1187,22 +1187,22 @@ def get_twiss_profiles(line, file_result=None, input_twiss_parameters=None, calc
 				gamma_z_list.append(0.0)
 
 			if file_result is not None:
-				print >> fresults, '%2f %5s %9.6f %9.6f %9.6f %9.6f %9.6f %9.6f %9.6f %9.6f %9.6f %9.6f %9.6f %9.6f' % (S_alltracks[0][i], label_ref[i], \
+				print('%2f %5s %9.6f %9.6f %9.6f %9.6f %9.6f %9.6f %9.6f %9.6f %9.6f %9.6f %9.6f %9.6f' % (S_alltracks[0][i], label_ref[i], \
 					mu_y_list[i], beta_y_list[i], alpha_y_list[i], gamma_y_list[i],disp_y_list[i],disp_py_list[i],\
-					mu_z_list[i], beta_z_list[i], alpha_z_list[i], gamma_z_list[i],disp_z_list[i],disp_pz_list[i])
+					mu_z_list[i], beta_z_list[i], alpha_z_list[i], gamma_z_list[i],disp_z_list[i],disp_pz_list[i]), file=fresults)
 
 
 	except (IndexError, ZeroDivisionError, ValueError):
-		print "Error calculating twiss parameters from twiss matrix"
-		print "i=", i, "(", label[i], ")"
-		print "Matrix:"
+		print("Error calculating twiss parameters from twiss matrix")
+		print("i=", i, "(", label[i], ")")
+		print("Matrix:")
 		for ai in range(1,7):
 			for aj in range(1,7):
 				if aj == 5 or ai == 6:
-					print "-\t",
+					print("-\t", end=' ')
 					continue
-				print eval("R%s%s_list[i]"%(ai,aj)),"\t",
-			print
+				print(eval("R%s%s_list[i]"%(ai,aj)),"\t", end=' ')
+			print()
 		raise
 
 	if file_result is not None:
@@ -1246,7 +1246,7 @@ def calc_phase_slip(line, tof_ref, del_p = 0.0001, init_YTZP = [0,0,0,0], tol_co
 			objet = e
 			break
 	else:
-		raise ValueError, "Line has no OBJET2 element"
+		raise ValueError("Line has no OBJET2 element")
 
 	closedorb_YTZP = None
 	closedorb_YTZP = find_closed_orbit(line, init_YTZP=init_YTZP, tol= tol_co, D= D*(1+del_p))
@@ -1297,13 +1297,13 @@ def fourier_tune(line, initial_YTZP, D_in, npass, plot_fourier=False, coords=Non
 			objet = e
 			break
 	else:
-		raise ValueError, "Line has no OBJET2 element"
+		raise ValueError("Line has no OBJET2 element")
 	
 	for e in line.element_list:
 		if ("FAISCNL" in str(type(e)).split("'")[1]):
 			break
 	else:
-		raise ValueError, "Line has no FAISCNL element"
+		raise ValueError("Line has no FAISCNL element")
 
 
 	#check line has a REBELOTE
@@ -1312,7 +1312,7 @@ def fourier_tune(line, initial_YTZP, D_in, npass, plot_fourier=False, coords=Non
 			reb = e
 			break
 	else:
-		raise ValueError, "Line has no REBELOTE element"
+		raise ValueError("Line has no REBELOTE element")
 
 	if coords == []:
 		objet.clear()	# remove existing particles
@@ -1422,13 +1422,13 @@ def scan_dynamic_aperture(line, emit_list_h, emit_list_v, closedorb_YTZP, npass,
 			objet = e
 			break
 	else:
-		raise ValueError, "Line has no OBJET2 element"
+		raise ValueError("Line has no OBJET2 element")
 
 	for e in line.element_list:
 		if ("FAISCNL" in str(type(e)).split("'")[1]):
 			break
 	else:
-		raise ValueError, "Line has no FAISCNL element"
+		raise ValueError("Line has no FAISCNL element")
 
 
 	#create reb so that number of passes can be set
@@ -1437,7 +1437,7 @@ def scan_dynamic_aperture(line, emit_list_h, emit_list_v, closedorb_YTZP, npass,
 			reb = e
 			break
 	else:
-		raise ValueError, "Line has no REBELOTE element"
+		raise ValueError("Line has no REBELOTE element")
 
 	rigidity = objet.BORO
 
@@ -1479,15 +1479,15 @@ def scan_dynamic_aperture(line, emit_list_h, emit_list_v, closedorb_YTZP, npass,
 	#if emit_list is a list of decreasing emittances, looking for the first point where particle is not lost
 	reverse_search = False
 	if emit_list_h[0] > emit_list_h[-1]:
-		print "decreasing list (emit_list_h) "
+		print("decreasing list (emit_list_h) ")
 		reverse_search = True
 		
 
 	coords_YTZP_ini_list = []
 	index = 0
 	for emit_h, emit_v in zip(emit_list_h, emit_list_v):
-		print "check amplitudes (h/v pi mm mrad) ", 1e6*emit_h, 1e6*emit_v
-		print "ellipse_coords, coord_pick ",ellipse_coords, coord_pick
+		print("check amplitudes (h/v pi mm mrad) ", 1e6*emit_h, 1e6*emit_v)
+		print("ellipse_coords, coord_pick ",ellipse_coords, coord_pick)
 
 		if coord_pick is None:
 			#obtain coordinates on phase space ellipses. Use beta, alpha values found at closed orbit
@@ -1513,8 +1513,8 @@ def scan_dynamic_aperture(line, emit_list_h, emit_list_v, closedorb_YTZP, npass,
 
 		for coord_index, current_YTZP in enumerate(coords_YTZP_ini):
 
-			print "ellipse coord index ", coord_index
-			print "current coords to test ",current_YTZP
+			print("ellipse coord index ", coord_index)
+			print("current coords to test ",current_YTZP)
 
 			objet.clear()	# remove existing particles
 			objet.add(Y=current_YTZP[0], T=current_YTZP[1], Z=current_YTZP[2], P=current_YTZP[3], LET='A', D=D_mom)
@@ -1535,7 +1535,7 @@ def scan_dynamic_aperture(line, emit_list_h, emit_list_v, closedorb_YTZP, npass,
 				nc = 0
 
 			if(lost):
-				print "tracking failed at emit_h, emit_v = ", emit_h, emit_v
+				print("tracking failed at emit_h, emit_v = ", emit_h, emit_v)
 				coord_index_lost = coord_index
 				
 			if nc > 2:
@@ -1562,7 +1562,7 @@ def scan_dynamic_aperture(line, emit_list_h, emit_list_v, closedorb_YTZP, npass,
 
 
 	else:
-		print "Successful tracking in all test cases"
+		print("Successful tracking in all test cases")
 
 	if plot_data:
 
@@ -1580,7 +1580,7 @@ def scan_dynamic_aperture(line, emit_list_h, emit_list_v, closedorb_YTZP, npass,
 			
 		for ia in range(len(Y_data)):
 		    for ib in range(len(Y_data[ia])):
-		        print >>fout, ia, Y_data[ia][ib],T_data[ia][ib],Z_data[ia][ib],P_data[ia][ib]
+		        print(ia, Y_data[ia][ib],T_data[ia][ib],Z_data[ia][ib],P_data[ia][ib], file=fout)
 		fout.close()
 		    
 		plot_data_xy_multi(Y_data, Z_data, 'yz_space', labels=["YZ coords", "y [cm]", "z [cm]"], style=['k+'])
@@ -1838,7 +1838,7 @@ def get_enclosing_circle(ellipse_data):
 		bc.append((a, b, c))
 
 	(centre, radius) = bc.get_circle()
-	print 'centre of enclosing circle =', centre, ", with radius =", radius
+	print('centre of enclosing circle =', centre, ", with radius =", radius)
 
 	return centre, radius
 
@@ -1939,8 +1939,8 @@ def tune_diagram(tune_list, order=3, xlim=None, ylim=None):
 	NY = 0
 	LOC = [0, 0]
 	col = ['b', 'r', 'g', 'm', 'y', 'k', 'c']*3
-	for I in xrange(1, order+1):
-		for J in xrange(-I, I+1):
+	for I in range(1, order+1):
+		for J in range(-I, I+1):
 			NX = J
 			if (NX>=0) and (NY>=0):
 				NY =  I-NX
@@ -1950,7 +1950,7 @@ def tune_diagram(tune_list, order=3, xlim=None, ylim=None):
 				NY =  I+NX
 			elif (NX<0) and (NY<0):
 				NY = -I-NX
-			for K in xrange(-I+1, I):
+			for K in range(-I+1, I):
 				X1 = -1
 				X2 = -1
 				Y1 = -1
@@ -2139,11 +2139,11 @@ def calc_transfer_matrix(start_bunch, end_bunch):
 	# FO(1,I10) => start['D'][I10] 
 	DP = (start['D'][I10] - start['D'][I11] ) / 0.5 /( start['D'][I10] + start['D'][I11])
 
-	for j in xrange(2,6):
+	for j in range(2,6):
 		tm[j-2, 5] = (end[co[j]][I10] - end[co[j]][I11]) / DP
 		#print co[j], I10, I11, (end[co[j]][I10] - end[co[j]][I11]) / DP
 
-		for i in xrange(1,5):
+		for i in range(1,5):
 			i2 = 2*i + IT1-1
 			i3 = i2 + 1
 			u0 = start[co[i+1]][i2] - start[co[i+1]][i3]

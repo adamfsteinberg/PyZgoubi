@@ -38,23 +38,23 @@ add(END())
 #print output()
 
 res = run(xterm=False)
-print res.res()
+print(res.res())
 
 if binary:
 	fai_data =  numpy.array(res.get_track('bfai', ['Y','T','Z','P'])) / [100, 1000, 100, 1000]
-	print type(fai_data)
+	print(type(fai_data))
 else:
 	fai_data =  numpy.array(res.get_track('fai', ['Y','T','Z','P'])) / [100, 1000, 100, 1000]
 
 
 
-print "%r"%b_orig_4d[0][0]
-print "%r"%fai_data[0][0]
+print("%r"%b_orig_4d[0][0])
+print("%r"%fai_data[0][0])
 
 errors = abs((b_orig_4d - fai_data) / numpy.maximum(b_orig_4d, fai_data))
-print "%r"%errors[0][0]
-print "mean errors in YTZP"
-print errors.mean(0)
+print("%r"%errors[0][0])
+print("mean errors in YTZP")
+print(errors.mean(0))
 assert(numpy.all(errors.mean(0) < [1e-13, 2e-13, 1e-13, 2e-13])), "error to big"
 
 
