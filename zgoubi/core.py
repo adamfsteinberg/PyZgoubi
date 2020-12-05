@@ -105,7 +105,7 @@ def read_n_lines(fh, n):
 	"reads n lines at a time"
 
 	lines = []
-	for dummy in xrange(n):
+	for dummy in range(n):
 		lines.append(fh.readline())
 	return lines
 
@@ -176,7 +176,7 @@ class Line(object):
 
 	def __rmul__(self, lhs):
 		new_line = Line(self.name)
-		for x in xrange(lhs):
+		for x in range(lhs):
 			for element in self.element_list:
 				new_line.add(element)
 		new_line.add_input_files(self.input_files)
@@ -184,7 +184,7 @@ class Line(object):
 
 	def __mul__(self, rhs):
 		new_line = Line(self.name)
-		for x in xrange(rhs):
+		for x in range(rhs):
 			for element in self.element_list:
 				new_line.add(element)
 		new_line.add_input_files(self.input_files)
@@ -487,7 +487,7 @@ class Line(object):
 		new_line.add(FAKE_ELEM(line_output))
 
 		stop_flag = threading.Event()
-		for thread_n in xrange(n_threads):
+		for thread_n in range(n_threads):
 			t = threading.Thread(target=worker,
 			                     kwargs={'in_q':in_q, 'out_q':out_q,
 			                     'work_line':new_line, 'name':thread_n, 'stop_flag':stop_flag})
@@ -511,7 +511,7 @@ class Line(object):
 		survive_particles = numpy.zeros(len(bunch), dtype=numpy.bool) # bit map, set true when filling with particles
 
 		# workers may return out of order, so use start_index to put the coords in the correct place
-		for x in xrange(n_tasks):
+		for x in range(n_tasks):
 			#print "collecting task", x
 			result = out_q.get()
 			try:
@@ -583,7 +583,7 @@ class Line(object):
 		"""Iterate through sub lines to find element as if indexed in a flat list
 		returns [line, index_in_line]"""
 		stack = [[self, -1]]
-		for n in xrange(index+1):
+		for n in range(index+1):
 			if stack[-1][1]+1 >= len(stack[-1][0].element_list):
 				# step back up
 				stack.pop()
@@ -1011,12 +1011,12 @@ class Results(object):
 		for n, line in enumerate(matrix_lines):
 			if line == "TRANSFER  MATRIX  ORDRE  1  (MKSA units)":
 				matrix1 = numpy.zeros([6, 6])
-				for x in xrange(6):
+				for x in range(6):
 					matrix1[x] = matrix_lines[x+n+2].split()
 				parsed_info['matrix1'] = matrix1
 			if line == "Beam  matrix  (beta/-alpha/-alpha/gamma) and  periodic  dispersion  (MKSA units)":
 				twissmat = numpy.zeros([6, 6])
-				for x in xrange(6):
+				for x in range(6):
 					row = []
 					for rowe in matrix_lines[x+n+2].split():
 						try:

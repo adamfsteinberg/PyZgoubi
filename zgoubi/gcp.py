@@ -577,7 +577,7 @@ def plot_cell_properties(data, output_prefix="results/cell_", file_fmt=".pdf", n
 
 	off_x, off_y = 0.1, -3
 	# horizontal
-	for n in xrange(n_energies):
+	for n in range(n_energies):
 		pyplot.plot([stable_data['Y'][n]], [stable_data['T'][n]], 'bx')
 		if (n_energies < 5) or ((n%int(n_energies/5))==0):
 			pyplot.annotate("%.3f"%(stable_data['KE'][n]/1e6), xy=(stable_data['Y'][n], stable_data['T'][n]),
@@ -597,7 +597,7 @@ def plot_cell_properties(data, output_prefix="results/cell_", file_fmt=".pdf", n
 	# vert
 	pyplot.clf()
 	off_x, off_y = 0, 0
-	for n in xrange(n_energies):
+	for n in range(n_energies):
 		pyplot.plot([stable_data['Z'][n]], [stable_data['P'][n]], 'bx')
 		if (n_energies < 5) or ((n%int(n_energies/5))==0):
 			pyplot.annotate("%.3f"%(stable_data['KE'][n]/1e6), xy=(stable_data['Z'][n], stable_data['P'][n]),

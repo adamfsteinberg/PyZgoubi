@@ -15,7 +15,7 @@ line_seg = Line("lineseg")
 line_seg.add(PROTON())
 
 t_bunch = b_orig
-for x in xrange(10):
+for x in range(10):
 	t_bunch = line_seg.track_bunch(t_bunch)
 
 

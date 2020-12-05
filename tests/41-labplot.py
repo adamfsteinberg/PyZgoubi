@@ -3,7 +3,7 @@ from zgoubi.lab_plot import LabPlot
 print("Drifts and bends")
 
 l = Line("lp test")
-for x in xrange(2):
+for x in range(2):
 	l.add(DRIFT("start", XL=0))
 	l.add(FAISCNL("start", FNAME='zgoubi.fai'))
 	l.add(DRIFT("d1", XL=5))
@@ -51,7 +51,7 @@ lp.save("plots/41-labplot_1.pdf")
 print("Drifts and bends 2")
 
 l = Line("lp test")
-for x in xrange(2):
+for x in range(2):
 	l.add(DRIFT("start", XL=0))
 	l.add(DRIFT("d1", XL=5))
 	l.add(BEND("b1", XPAS=(10,10,10), XL=5, B1=-4, KPOS=3, W_E = radians(0), W_S = radians(0)))
@@ -104,7 +104,7 @@ dipole_angle = 2*pi/36
 dipole_field = -0.2*T
 dipole_bend_radius  = abs(ref_rid / (dipole_field *kgauss_ ) *cm)
 ad = abs(degrees(dipole_angle))
-for x in xrange(2):
+for x in range(2):
 	l.add(DRIFT("start", XL=0))
 	l.add(FAISCNL("start", FNAME='zgoubi.fai'))
 	l.add(DRIFT("d1", XL=5))
@@ -176,7 +176,7 @@ dipole_angle = 2*pi/36
 dipole_field = -0.2*T
 dipole_bend_radius  = abs(ref_rid / (dipole_field *kgauss_ ) *cm)
 ad = abs(degrees(dipole_angle))
-for x in xrange(2):
+for x in range(2):
 	l.add(DRIFT("start", XL=0))
 	l.add(FAISCNL("start", FNAME='zgoubi.fai'))
 	l.add(DRIFT("d1", XL=5))
@@ -259,7 +259,7 @@ dipole_field = -0.2*T
 dipole_bend_radius  = abs(ref_rid / (dipole_field *kgauss_ ) *cm)
 ad = abs(degrees(dipole_angle))
 
-for x in xrange(1):
+for x in range(1):
 	
 	#l.add(MULTIPOL("d", XL=0, B_1=1e-10, R_0=1, KPOS=1))
 	#l.add(FAISCNL("", FNAME='zgoubi.fai'))

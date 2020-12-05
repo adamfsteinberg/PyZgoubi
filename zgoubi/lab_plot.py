@@ -133,7 +133,7 @@ class LabPlotElement(object):
 						if os.path.basename(fname) == self.z_element.FNAME:
 							self.fmap_file_path = fname
 							fmap_file = open(self.fmap_file_path)
-				for n in xrange(4): dummy = fmap_file.readline()
+				for n in range(4): dummy = fmap_file.readline()
 				phi_line = fmap_file.readline()
 				phi_line = phi_line.split()
 				self.dip_at = float(phi_line[-1])

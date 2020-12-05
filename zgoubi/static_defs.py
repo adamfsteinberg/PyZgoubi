@@ -111,7 +111,7 @@ class OBJET2(zgoubi_element):
 			out += nl
 		
 		# assume that we want to track all particles
-		for x in xrange(len(self.particles)):
+		for x in range(len(self.particles)):
 			out += i(1) + ' '
 			if ((x+1)%10 == 0):
 				out += nl # add a new line after 10 values

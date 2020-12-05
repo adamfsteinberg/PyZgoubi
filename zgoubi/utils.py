@@ -55,7 +55,7 @@ def coords_grid(min_c=None, max_c=None, step=None, dtype=float):
 	#assert(len(min)==2)
 	dimention = len(min_c)
 
-	stride = [(max_c[x]-min_c[x])/step[x] for x in xrange(dimention)]
+	stride = [(max_c[x]-min_c[x])/step[x] for x in range(dimention)]
 
 	indexes = numpy.zeros(step)
 
@@ -64,7 +64,7 @@ def coords_grid(min_c=None, max_c=None, step=None, dtype=float):
 	for ind, dummy in numpy.ndenumerate(indexes):
 		#print ind
 		this_coord = []
-		for x in xrange(len(ind)):
+		for x in range(len(ind)):
 			this_coord.append(stride[x] * ind[x] + min[x])
 		coords.append(this_coord)
 
@@ -304,7 +304,7 @@ def find_closed_orbit_range(line, init_YTZP=None, max_iterations=100, fai_label 
 	
 	# generate bunch
 	ranges = []
-	for x in xrange(4):
+	for x in range(4):
 		if range_YTZP[x] == 0 or count_YTZP[0] <= 1:
 			ranges.append([0])
 		else:
@@ -396,7 +396,7 @@ def find_closed_orbit(line, init_YTZP=None, max_iterations=100, fai_label = None
 	tracks = []
 	laps = []
 	close_orbit_found = 0
-	for iteration in xrange(max_iterations):
+	for iteration in range(max_iterations):
 		zlog.debug("start iteration: "+str(iteration)+ " with coords "+str(current_YTZP))
 		coords.append(current_YTZP)
 		objet.clear()	# remove existing particles
@@ -475,7 +475,7 @@ def find_closed_orbit(line, init_YTZP=None, max_iterations=100, fai_label = None
 		current_YTZP = numpy.array([centre_h[0], centre_h[1], centre_v[0], centre_v[1]])
 		
 		difs = numpy.zeros(4)
-		for x in xrange(4):
+		for x in range(4):
 			if abs(prev_YTZP[x]) < tol or abs(current_YTZP[x]) < tol:
 				difs[x] = abs(prev_YTZP[x] - current_YTZP[x])
 			else:
@@ -495,7 +495,7 @@ def find_closed_orbit(line, init_YTZP=None, max_iterations=100, fai_label = None
 			if close_orbit_found > extra_iterations:
 				break
 	
-	for x in xrange(len(areas)):
+	for x in range(len(areas)):
 		print("it:", x, "\tYTZP", coords[x], "\tarea", areas[x], "\t laps", laps[x])
 
 	if close_orbit_found>0:
@@ -1939,8 +1939,8 @@ def tune_diagram(tune_list, order=3, xlim=None, ylim=None):
 	NY = 0
 	LOC = [0, 0]
 	col = ['b', 'r', 'g', 'm', 'y', 'k', 'c']*3
-	for I in xrange(1, order+1):
-		for J in xrange(-I, I+1):
+	for I in range(1, order+1):
+		for J in range(-I, I+1):
 			NX = J
 			if (NX>=0) and (NY>=0):
 				NY =  I-NX
@@ -1950,7 +1950,7 @@ def tune_diagram(tune_list, order=3, xlim=None, ylim=None):
 				NY =  I+NX
 			elif (NX<0) and (NY<0):
 				NY = -I-NX
-			for K in xrange(-I+1, I):
+			for K in range(-I+1, I):
 				X1 = -1
 				X2 = -1
 				Y1 = -1
@@ -2139,11 +2139,11 @@ def calc_transfer_matrix(start_bunch, end_bunch):
 	# FO(1,I10) => start['D'][I10] 
 	DP = (start['D'][I10] - start['D'][I11] ) / 0.5 /( start['D'][I10] + start['D'][I11])
 
-	for j in xrange(2,6):
+	for j in range(2,6):
 		tm[j-2, 5] = (end[co[j]][I10] - end[co[j]][I11]) / DP
 		#print co[j], I10, I11, (end[co[j]][I10] - end[co[j]][I11]) / DP
 
-		for i in xrange(1,5):
+		for i in range(1,5):
 			i2 = 2*i + IT1-1
 			i3 = i2 + 1
 			u0 = start[co[i+1]][i2] - start[co[i+1]][i3]

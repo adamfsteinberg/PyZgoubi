@@ -123,9 +123,9 @@ def define_file(fname, allow_lookup=False):
 
 	fh.seek(0)
 	if file_mode == 'ascii':
-		header = [fh.readline() for x in xrange(4)]
+		header = [fh.readline() for x in range(4)]
 	else:
-		header = [read_fortran_record(fh) for x in xrange(4)]
+		header = [read_fortran_record(fh) for x in range(4)]
 	
 	if header[2].startswith("..."):
 		raise OldFormatError, "This is an old format that does not define column headings"
@@ -243,7 +243,7 @@ def read_file(fname):
 
 	
 	if file_def["file_mode"] == "ascii":
-		dummy = [fh.readline().strip() for dummy in xrange(4)]
+		dummy = [fh.readline().strip() for dummy in range(4)]
 		file_data = [] 
 		# acsii files a space separated, but the quote around the stings are similar to in a csv file
 		# so use csv module to split the line into elements
@@ -301,7 +301,7 @@ def read_file(fname):
 	
 		file_data2 = numpy.zeros(num_records, dtype= numpy.dtype(data_type))
 		
-		for n in xrange(num_records):
+		for n in range(num_records):
 			full_rec = fh.read(rec_len)
 			#FIXME this check wastes some time in a bit of code that should be fast. maybe should only be on if debug is enabled
 			if not ((rec_len-8) == struct.unpack("i", full_rec[:4])[0] == struct.unpack("i", full_rec[-4:])[0]):

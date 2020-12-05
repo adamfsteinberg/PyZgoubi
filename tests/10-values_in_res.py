@@ -6,7 +6,7 @@ ob.add(Y=0, T=0.1, D=1)
 add(ob)
 
 #test values
-tv = [x+0.1234567890123456789 for x in xrange(1,10)]
+tv = [x+0.1234567890123456789 for x in range(1,10)]
 
 q1 = QUADRUPO(XL=tv[0], R_0=tv[1],B_0=tv[2],  XPAS=(10,20,10))
 add(q1)
@@ -23,7 +23,7 @@ print("  ", output_lines[quad_line + 4])
 bits = output_lines[quad_line + 2].split()
 
 print()
-for x in xrange(3):
+for x in range(3):
 	error = tv[x]- float(bits[x])
 	print(repr(tv[x]), bits[x], error)
 	if error > 1e-12:
@@ -62,7 +62,7 @@ for line in res_lines[quad_line:quad_line + 7]:
 
 print(rv)
 
-for x in xrange(3):
+for x in range(3):
 	error = tv[x]-rv[x]
 	print(repr(tv[x]), rv[x], error)
 	if error > 1e-3:
