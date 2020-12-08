@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 from __future__ import print_function
 from setuptools import setup 
 import sys
@@ -52,7 +52,10 @@ setup(name='pyzgoubi',
 	             "Intended Audience :: Science/Research",
 				 "Topic :: Scientific/Engineering :: Physics",
 				 "License :: OSI Approved :: GNU General Public License (GPL)",
-				 "Programming Language :: Python :: 2.7"],
+				 "Programming Language :: Python :: 3.7"
+				 "Programming Language :: Python :: 3.8"
+				 "Programming Language :: Python :: 3.9"
+				 ],
 	# install_requires tends to install new versions, even if not needed, so comment out
 	#install_requires=["numpy>=1.8.0", "scipy>=0.13.0", "matplotlib>=1.2.0"],
 	)

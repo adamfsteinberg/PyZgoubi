@@ -143,7 +143,7 @@ def define_file(fname, allow_lookup=False):
 
 	
 	signature = file_mode + file_type + header[2] + header[3] + str(record_len)
-	signature = hashlib.md5(signature).hexdigest()	
+	signature = hashlib.md5(signature.encode()).hexdigest()
 
 	if allow_lookup:
 		try:
@@ -234,7 +234,7 @@ def read_file(fname):
 	"Read a zgoubi output file. Return a numpy array with named column headers. The format is automatically worked out from the header information."
 	file_def = define_file(fname)
 
-	data_type = zip(file_def['names'], file_def['types'])
+	data_type = list(zip(file_def['names'], file_def['types']))
 	if file_def["file_mode"] == "binary" and sys.platform == "win32":
 		fh = open_file_or_name(fname, mode="rb")
 	else:

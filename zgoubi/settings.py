@@ -2,7 +2,7 @@
 "Read settings from ~/.pyzgoubi"
 from __future__ import division, print_function
 
-import ConfigParser
+import configparser
 import os
 import tempfile
 
@@ -15,7 +15,7 @@ if not os.path.exists(config_dir):
 
 config_path = os.path.join(config_dir, "settings.ini")
 
-config = ConfigParser.RawConfigParser()
+config = configparser.RawConfigParser()
 config.add_section('pyzgoubi')
 #default values
 config.set('pyzgoubi', 'tmp_dir', tempfile.gettempdir())

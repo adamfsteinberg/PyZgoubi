@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 from __future__ import print_function
 import tempfile
 import shutil
@@ -65,9 +65,9 @@ print("installing to", install_dir)
 print("installing to", install_dir, file=log)
 #install_res = os.system("python setup.py install --prefix=%s"%install_dir)
 #subprocess.Popen(["./setup.py", "clean", "--all"])
-clean_proc = subprocess.Popen(["python2", "./setup.py", "clean", "--all"], stdout=log, stderr=subprocess.STDOUT)
+clean_proc = subprocess.Popen(["python3", "./setup.py", "clean", "--all"], stdout=log, stderr=subprocess.STDOUT)
 clean_proc.wait()
-install_res = subprocess.Popen(["python2", "./setup.py", "install", "--single-version-externally-managed", "--prefix=%s"%install_dir], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+install_res = subprocess.Popen(["python3", "./setup.py", "install", "--single-version-externally-managed", "--prefix=%s"%install_dir], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, encoding="utf-8")
 
 for line in install_res.communicate()[0].split('\n'):
 	print(line, file=log)

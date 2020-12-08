@@ -16,7 +16,7 @@ from zgoubi.exceptions import *
 from zgoubi.rel_conv import *
 import itertools
 from zgoubi.core import zlog, dep_warn, Line
-from StringIO import StringIO
+from io import StringIO
 import copy
 
 # use these to convert things to metres and tesla

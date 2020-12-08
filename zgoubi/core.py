@@ -35,7 +35,7 @@ import struct
 from glob import glob
 import copy
 import threading
-import Queue
+import queue
 import subprocess
 import weakref
 import warnings
@@ -65,8 +65,7 @@ from zgoubi.elements import *
 
 from zgoubi.settings import zgoubi_settings
 
-# in python3 we will be able to use zlog.setLevel(zgoubi_settings['log_level']), can be changed in pyzgoubi too
-zlog.setLevel(logging._levelNames[zgoubi_settings['log_level']])
+zlog.setLevel(zgoubi_settings['log_level'])
 
 sys.setcheckinterval(10000)
 
@@ -454,8 +453,8 @@ class Line(object):
 		
 	def track_bunch_mt(self, bunch, n_threads=4, max_particles=None, binary=False, **kwargs):
 		"This function should be used identically to the track_bunch function, apart from the addition of the n_threads argument. This will split the bunch into several slices and run them simultaneously. Set n_threads to the number of CPU cores that you have. max_particle can be set to limit how many particles are sent at a time."
-		in_q = Queue.Queue()
-		out_q = Queue.Queue()
+		in_q = queue.Queue()
+		out_q = queue.Queue()
 		if max_particles is None:
 			max_particles = 1e3
 
@@ -464,7 +463,7 @@ class Line(object):
 			while True:
 				try:
 					start_index, work_bunch = in_q.get(block=True, timeout=0.1)
-				except Queue.Empty:
+				except queue.Empty:
 					#print "get() timed out in thread", name
 					if stop_flag.is_set():
 						#print "exiting thread", name
