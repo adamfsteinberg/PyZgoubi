@@ -87,10 +87,7 @@ def write_fortran_record(fh, record):
 	"Write a record, adds record length to start and end"
 	rec_len = len(record)
 	rec_len_r = struct.pack("i", rec_len)
-	fh.write(rec_len_r+record+rec_len_r)
-	#fh.write(record)
-	#fh.write(rec_len_r)
-
+	fh.write(rec_len_r+record.encode("ASCII")+rec_len_r)
 
 
 def define_file(fname, allow_lookup=False):
@@ -99,21 +96,22 @@ def define_file(fname, allow_lookup=False):
 	fh.seek(0)
 	file_size = os.path.getsize(fh.name)
 
-	first_bytes = fh.read(30)
-	# zgoubi's ascii files start with '# '
-	# the binary files start with an int that tells you the length of the next record
-	
-	if first_bytes[0:2] == "# ":
-		file_mode = 'ascii'
-	else:
+	try:
+		first_bytes = fh.read(30)
+		# zgoubi's ascii files start with '# '
+		# the binary files start with an int that tells you the length of the next record
+		if first_bytes[0:2] == "# ":
+			file_mode = 'ascii'
+		else:
+			file_mode = 'binary'
+	except UnicodeDecodeError:
 		file_mode = 'binary'
-		if sys.platform == "win32":
-			# reopen as binary
-			fh = open_file_or_name(fname, mode="rb")
-			fh.seek(0)
-			first_bytes = fh.read(30)
-			
 	
+	if file_mode == 'binary':
+		fh = open_file_or_name(fname, mode="rb")
+		fh.seek(4) # record header
+		first_bytes = fh.read(30).decode("ASCII") #  record contents is ascii
+
 	if "COORDINATES" in first_bytes:
 		file_type = "fai"
 	elif "TRAJECTORIES" in first_bytes:
@@ -125,7 +123,7 @@ def define_file(fname, allow_lookup=False):
 	if file_mode == 'ascii':
 		header = [fh.readline() for x in range(4)]
 	else:
-		header = [read_fortran_record(fh) for x in range(4)]
+		header = [read_fortran_record(fh).decode("ASCII") for x in range(4)]
 	
 	if header[2].startswith("..."):
 		raise OldFormatError("This is an old format that does not define column headings")
@@ -235,7 +233,7 @@ def read_file(fname):
 	file_def = define_file(fname)
 
 	data_type = list(zip(file_def['names'], file_def['types']))
-	if file_def["file_mode"] == "binary" and sys.platform == "win32":
+	if file_def["file_mode"] == "binary":
 		fh = open_file_or_name(fname, mode="rb")
 	else:
 		fh = open_file_or_name(fname)
