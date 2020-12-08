@@ -15,9 +15,9 @@ myline.add(d1, q1, d2, q2)
 myline.add(FAISCNL(FNAME='zgoubi.fai')) # record point
 myline.add(END())
 
-print myline.output() # file fed to zgoubi (zgoubi.dat)
+print(myline.output()) # file fed to zgoubi (zgoubi.dat)
 myresults = myline.run() # run the line in zgoubi
-print myresults.res() # show the zgoubi.res file
-print myresults.get_all('fai') # so the data recorded with FAISCNL
+print(myresults.res()) # show the zgoubi.res file
+print(myresults.get_all('fai')) # so the data recorded with FAISCNL
 
 

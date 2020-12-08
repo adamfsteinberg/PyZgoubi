@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #Find magnet aperture assuming a circular beam pipe. The aperture is given by the smallest circle that encloses the beam ellipses in the magnets at various momenta
-print "running emma example"
+print("running emma example")
 
 emma = Line('emma')
 
@@ -145,8 +145,8 @@ QD_ellipse_data = numpy.transpose([flatten(Y_rad_QD), flatten(Z_rad_QD),flatten(
 QF_ellipse_data = numpy.transpose([flatten(Y_rad_QF), flatten(Z_rad_QF),flatten(Y_co_QF)])
 
 #Use Scott's Ellipse algorithm to find centre and radius of enclosing circle
-print "find magnet aperture in D magnet"
+print("find magnet aperture in D magnet")
 get_enclosing_circle(QD_ellipse_data)
 
-print "find magnet aperture in F magnet"
+print("find magnet aperture in F magnet")
 get_enclosing_circle(QF_ellipse_data)

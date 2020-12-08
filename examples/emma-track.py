@@ -1,4 +1,4 @@
-print "running emma example"
+print("running emma example")
 
 emma = Line('emma')
 
@@ -57,17 +57,17 @@ ob.add(Y=0, T=0, D=1)
 res = emma.run()
 
 fai_data =  res.get_all('fai')
-print "fai"
-print "PASS Y T"
+print("fai")
+print("PASS Y T")
 for p in fai_data:
-	print p['PASS'], p['Y'], p['T']
+	print(p['PASS'], p['Y'], p['T'])
 
 plt_data = res.get_all('plt')
-print "plt"
-print "PASS Y T element_label1"
+print("plt")
+print("PASS Y T element_label1")
 for p in plt_data:
 	if p['PASS'] == 3:
-		print p['PASS'], p['Y'], p['T'], p['element_label1']
+		print(p['PASS'], p['Y'], p['T'], p['element_label1'])
 		
 
 

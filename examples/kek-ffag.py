@@ -99,9 +99,9 @@ rigidity = ke_to_rigidity(150e6, 938.272013e6)
 ob.set(BORO=rigidity)
 ob.add(Y=517, T=0, D=1)
 
-print ffagex.output()
+print(ffagex.output())
 res = ffagex.run(xterm = False)
-print res.res()
+print(res.res())
 res.clean()
 
 #must give reasonable initial guess at closed orbit 
@@ -130,7 +130,7 @@ r = ffagex.run(xterm = False)
 
 #find tune calculated by MATRIX over this periodic cell
 tune = r.get_tune()
-print "tune ",tune
+print("tune ",tune)
 
 #get twiss parameters at end of cell, returns [beta_y,alpha_y,gamma_y,disp_y,disp_py,beta_z,alpha_z,gamma_z,disp_z,disp_pz]
 twissparam = r.get_twiss_parameters()

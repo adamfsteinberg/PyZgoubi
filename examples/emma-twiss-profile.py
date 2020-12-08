@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-print "running emma example"
+print("running emma example")
 
 emma = Line('emma')
 
@@ -100,11 +100,11 @@ twiss_profiles = get_twiss_profiles(emma,'twiss_profiles.txt')
 #Note - Could alternatively specify twiss parameters at beginning of cell
 #twiss_profiles = get_twiss_profiles(emma,'twiss_profiles.txt',input_twiss_parameters = twissparam)
 
-print "phase_slip ",phase_slip
-print "momentum compaction factor ",alpha_c
-print "beta Y,Z at end of cell ",betayz
-print "alpha Y,Z at end of cell ",alphayz
-print "gamma Y,Z at end of cell ",gammayz
+print("phase_slip ",phase_slip)
+print("momentum compaction factor ",alpha_c)
+print("beta Y,Z at end of cell ",betayz)
+print("alpha Y,Z at end of cell ",alphayz)
+print("gamma Y,Z at end of cell ",gammayz)
 
 
 #extract s coordinate and beta_y from twiss_profiles and create figure beta_y_profile.png
