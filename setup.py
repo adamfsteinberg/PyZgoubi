@@ -1,5 +1,5 @@
 #!/usr/bin/env python2
-#from distutils.core import setup
+from __future__ import print_function
 from setuptools import setup 
 import sys
 import os
@@ -20,9 +20,9 @@ if not ( "--help" in sys.argv):
 			f =open("build/lib/zgoubi/version.py","w")
 			f.close()
 			os.remove("build/lib/zgoubi/version.py")
-		except IOError, exc:
+		except IOError as exc:
 			if exc.errno == errno.EACCES:
-				print "ERROR: Permission denied updating zgoubi/version.py, build and/or install.log.\nIf they are owned by root, due to previously running install as root please remove them (eg. sudo ./setup.py clean --all ; sudo rm install.log zgoubi/version.py)."
+				print("ERROR: Permission denied updating zgoubi/version.py, build and/or install.log.\nIf they are owned by root, due to previously running install as root please remove them (eg. sudo ./setup.py clean --all ; sudo rm install.log zgoubi/version.py).")
 				exit(1)
 
 
@@ -80,8 +80,8 @@ if ("install" in sys.argv) and not ( "--help" in sys.argv):
 			if line.endswith("zgoubi\__init__.py"):
 				lib_path = line.rpartition('\\')[0].rpartition('\\')[0]
 	except IOError:
-		print "Could not see install log, install may have failed."
-		print "Can't give help with setting up path"
+		print("Could not see install log, install may have failed.")
+		print("Can't give help with setting up path")
 		sys.exit(1)
 
 	if lib_path.endswith(".egg"):
@@ -89,18 +89,18 @@ if ("install" in sys.argv) and not ( "--help" in sys.argv):
 
 	try:
 		if sys.platform == "win32":
-			print "Add the following to your PATH variable in user Environment Variables control panel"
+			print("Add the following to your PATH variable in user Environment Variables control panel")
 			#print "export PYTHONPATH=$PYTHONPATH:%s"%lib_path
-			print bin_path
+			print(bin_path)
 			bat_file = open(os.path.join( bin_path, "pyzgoubi.bat"), "w")
 			bat_file.write("set PYTHONPATH=%%PYTHONPATH%%;%s\n"%lib_path)
 			bat_file.write("python %s\\pyzgoubi %%*\n"%bin_path)
 			bat_file.close()
 		else:
-			print "\nyou may need to add the following to your .bashrc"
-			print "export PYTHONPATH=%s:$PYTHONPATH"%lib_path
-			print "export PATH=%s:$PATH"%bin_path
+			print("\nyou may need to add the following to your .bashrc")
+			print("export PYTHONPATH=%s:$PYTHONPATH"%lib_path)
+			print("export PATH=%s:$PATH"%bin_path)
 	except NameError:
-		print "Could not find all paths in logfile"
+		print("Could not find all paths in logfile")
 
 

@@ -1,4 +1,5 @@
 #!/usr/bin/env python2
+from __future__ import print_function
 import tempfile
 import shutil
 import os
@@ -9,21 +10,21 @@ import datetime
 import getopt
 
 def usage():
-	print "Usage:"
-	print sys.argv[0]
-	print sys.argv[0], "[testname [testname2 ...]]"
-	print sys.argv[0], "--zgoubi=/path/to/zgoubi"
-	print sys.argv[0], "--zgoubi=/path/to/zgoubi1,/path/to/zgoubi2"
-	print sys.argv[0], "--zgoubi=~/bin"
-	print sys.argv[0], "--logfile=testlog.txt"
+	print("Usage:")
+	print(sys.argv[0])
+	print(sys.argv[0], "[testname [testname2 ...]]")
+	print(sys.argv[0], "--zgoubi=/path/to/zgoubi")
+	print(sys.argv[0], "--zgoubi=/path/to/zgoubi1,/path/to/zgoubi2")
+	print(sys.argv[0], "--zgoubi=~/bin")
+	print(sys.argv[0], "--logfile=testlog.txt")
 
 
 
 try:
 	opts, args = getopt.getopt(sys.argv[1:], "h", ["help", "logfile=", "zgoubi="])
-except getopt.GetoptError, err:
+except getopt.GetoptError as err:
 # print help information and exit:
-	print str(err) # will print something like "option -a not recognized"
+	print(str(err)) # will print something like "option -a not recognized"
 	usage()
 	sys.exit(2)
 
@@ -50,18 +51,18 @@ for o, a in opts:
 			else:
 				zgoubi_bins.append(path)
 
-		print zgoubi_bins
+		print(zgoubi_bins)
 
 	
 
 log = open(log_file_path, "w")
-print "writing test log to:", log_file_path
+print("writing test log to:", log_file_path)
 
 #install pyzoubi to temp folder
 install_dir = tempfile.mkdtemp(prefix='pyzgoubi_test_inst_')
-print "installing to", install_dir
+print("installing to", install_dir)
 
-print >> log, "installing to", install_dir
+print("installing to", install_dir, file=log)
 #install_res = os.system("python setup.py install --prefix=%s"%install_dir)
 #subprocess.Popen(["./setup.py", "clean", "--all"])
 clean_proc = subprocess.Popen(["python2", "./setup.py", "clean", "--all"], stdout=log, stderr=subprocess.STDOUT)
@@ -69,7 +70,7 @@ clean_proc.wait()
 install_res = subprocess.Popen(["python2", "./setup.py", "install", "--single-version-externally-managed", "--prefix=%s"%install_dir], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
 for line in install_res.communicate()[0].split('\n'):
-	print >>log, line
+	print(line, file=log)
 	if line.startswith('export PYTHONPATH='):
 		env_pythonpath = line.rpartition('=')[2].rpartition(':')[0]
 		os.environ["PYTHONPATH"] = os.pathsep + env_pythonpath
@@ -83,19 +84,19 @@ if sys.platform == "win32":
 	pyzgoubi_cmd = os.path.join(last_line, "pyzgoubi.bat")
 else:
 	pyzgoubi_cmd = "pyzgoubi"
-print last_line
+print(last_line)
 	
 if install_res.returncode != 0:
-	print "ERROR: install failed"
-	print >> log, "ERROR: install failed"
-	print "If there were permission errors, try running 'sudo ./setup.py clean --all' and 'sudo rm install.log zgoubi/version.py'"
-	print >> log,"If there were permission errors, try running 'sudo ./setup.py clean --all' and 'sudo rm install.log zgoubi/version.py'"
+	print("ERROR: install failed")
+	print("ERROR: install failed", file=log)
+	print("If there were permission errors, try running 'sudo ./setup.py clean --all' and 'sudo rm install.log zgoubi/version.py'")
+	print("If there were permission errors, try running 'sudo ./setup.py clean --all' and 'sudo rm install.log zgoubi/version.py'", file=log)
 	sys.exit(1)
 
 pyzgoubi_cmd += " --debug"
 
-print
-print >>log
+print()
+print(file=log)
 log.flush()
 pyzgoubi_cmd = pyzgoubi_cmd.replace(r"\$", "$")
 proc = subprocess.Popen(pyzgoubi_cmd+" --version", shell=True, stderr=subprocess.STDOUT, stdout=log)
@@ -103,8 +104,8 @@ proc.wait()
 
 # move to another temp dir for running tests
 run_dir = tempfile.mkdtemp(prefix='pyzgoubi_test_run_')
-print "running tests from", run_dir
-print >> log,"running tests from", run_dir
+print("running tests from", run_dir)
+print("running tests from", run_dir, file=log)
 os.chdir(run_dir)
 
 test_dir = os.path.join(install_dir, 'share', 'pyzgoubi','test')
@@ -119,18 +120,18 @@ tests_fail = []
 tot_time = 0
 
 for test_file in tests:
-	print
-	print >>log, "\n", "="*40
+	print()
+	print("\n", "="*40, file=log)
 	log.flush()
 	if len(args) > 0:
 		if test_file not in args:
-			print "skipping", test_file
-			print >> log, "skipping", test_file
+			print("skipping", test_file)
+			print("skipping", test_file, file=log)
 			continue
 	full_test_file = os.path.join(test_dir, test_file)
 	tests_run += 1
-	print "running test %s, %d of %d"%(test_file, tests_run, number_of_tests)
-	print >> log,"running test %s, %d of %d"%(test_file, tests_run, number_of_tests)
+	print("running test %s, %d of %d"%(test_file, tests_run, number_of_tests))
+	print("running test %s, %d of %d"%(test_file, tests_run, number_of_tests), file=log)
 	log.flush()
 	for zgoubi_bin in zgoubi_bins:
 		if zgoubi_bin is None:
@@ -138,14 +139,14 @@ for test_file in tests:
 			test_name = test_file
 		else:
 			command = pyzgoubi_cmd + " --zgoubi="+ zgoubi_bin + " " + full_test_file
-			print "Using zgoubi:", zgoubi_bin
-			print >>log, "Using zgoubi:", zgoubi_bin
+			print("Using zgoubi:", zgoubi_bin)
+			print("Using zgoubi:", zgoubi_bin, file=log)
 			test_name = test_file + " " + zgoubi_bin
 
 		t0 = time.time()
 		#	result = os.system(command)
-		print command
-		print >>log, command
+		print(command)
+		print(command, file=log)
 		log.flush()
 		proc = subprocess.Popen(command, shell=True, stderr=subprocess.STDOUT, stdout=log)
 		proc.wait()
@@ -153,53 +154,53 @@ for test_file in tests:
 		t1 = time.time()
 		t = t1 - t0
 		log.flush()
-		print
-		print >>log, "\n", "="*40
+		print()
+		print("\n", "="*40, file=log)
 		log.flush()
 		if result == 0:
-			print "PASS:", test_name
-			print >> log,"PASS:", test_name
+			print("PASS:", test_name)
+			print("PASS:", test_name, file=log)
 			tests_sucess.append(test_name)
 		else:
-			print "FAIL:", test_name
-			print >> log,"FAIL:", test_name
+			print("FAIL:", test_name)
+			print("FAIL:", test_name, file=log)
 			tests_fail.append(test_name)
-		print "Took %s sec"%t
-		print >> log,"Took %s sec"%t
+		print("Took %s sec"%t)
+		print("Took %s sec"%t, file=log)
 		tot_time += t
 
 
-print "\nSummary:"
-print >> log,"\nSummary:"
+print("\nSummary:")
+print("\nSummary:", file=log)
 if zgoubi_bins[0] is not None:
-	print "Using zgoubi binaries:"
-	print>> log, "Using zgoubi binaries:"
+	print("Using zgoubi binaries:")
+	print("Using zgoubi binaries:", file=log)
 	for zgoubi_bin in zgoubi_bins:
-		print "\t", zgoubi_bin
-		print>> log, "\t", zgoubi_bin
+		print("\t", zgoubi_bin)
+		print("\t", zgoubi_bin, file=log)
 
 
-print "Ran %d tests"%tests_run
-print >> log,"Ran %d tests"%tests_run
-print "Pass %d"%len(tests_sucess)
-print >> log,"Pass %d"%len(tests_sucess)
-print "Fail %d"%len(tests_fail)
-print >> log,"Fail %d"%len(tests_fail)
+print("Ran %d tests"%tests_run)
+print("Ran %d tests"%tests_run, file=log)
+print("Pass %d"%len(tests_sucess))
+print("Pass %d"%len(tests_sucess), file=log)
+print("Fail %d"%len(tests_fail))
+print("Fail %d"%len(tests_fail), file=log)
 if len(tests_fail) != 0:
-	print "Failed tests:"
-	print >> log,"Failed tests:"
+	print("Failed tests:")
+	print("Failed tests:", file=log)
 	for t in tests_fail:
-		print t
+		print(t)
 
-print "Took %s sec"%tot_time
-print >> log,"Took %s sec"%tot_time
+print("Took %s sec"%tot_time)
+print("Took %s sec"%tot_time, file=log)
 
 os.chdir(orig_dir)
 
 shutil.rmtree(install_dir)
 shutil.rmtree(run_dir)
 
-print "Test written log to:", log_file_path
+print("Test written log to:", log_file_path)
 
 if len(tests_fail) == 0:
 	sys.exit(0)
