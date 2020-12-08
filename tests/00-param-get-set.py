@@ -28,9 +28,9 @@ assert(b.IL == 1)
 
 #check some things that should not work
 assert_eval_raises("b = BEND(XX=1)", locals())
-assert_eval_raises("b = BEND(XX=1)", locals(), ValueError)
+assert_eval_raises("b = BEND(XX=1)", locals(), NameError)
 
-assert_eval_raises("b = BEND(XL=1, XX=1)", locals(), ValueError)
+assert_eval_raises("b = BEND(XL=1, XX=1)", locals(), NameError)
 
 
 # and the more complex 
