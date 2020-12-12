@@ -8,8 +8,8 @@ This is an interface to zgoubi. And framework for accelerator design. It is test
 
 Requirements:
 
-* Python 2.5 or newer (not ported to 3.x yet)(2.7 recommended)
-* Numpy 1.4 or newer 
+* Python 3.7 or newer
+* Numpy 1.16 or newer
 
 Recomended
 
@@ -49,12 +49,12 @@ There are some tests distributed with the source code. To run tests run::
 
 Note that there are some know failures, see CHANGES for more info. 
 
-Documentation is available at http://www.hep.manchester.ac.uk/u/samt/pyzgoubi/doc.html or in the doc/ directory.
+Documentation is available at http://pyzgoubi.org/ or in the doc/ directory.
 To build the documentation run (you will need sphinx installed)::
 
 	./setup.py build_sphinx
 
-More information can be found at http://www.hep.manchester.ac.uk/u/samt/pyzgoubi/ or https://sourceforge.net/projects/pyzgoubi/
+More information can be found at http://pyzgoubi.org/ or https://github.com/PyZgoubi/PyZgoubi
 
 
 
