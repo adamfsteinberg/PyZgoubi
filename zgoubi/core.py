@@ -989,12 +989,12 @@ class Results(object):
 		
 		fh = self.res_fh()
 		while True:
-			try: line = fh.next()
-			except StopIteration: break
+			line = fh.readline()
+			if not line: break
 			if line.startswith("******"): # find start of an output block
 				found_output = True
-				try: element_line = fh.next()
-				except StopIteration: break
+				element_line = fh.readline()
+				if not element_line: break
 				if element_line.strip() == "": continue
 
 				# find element type
