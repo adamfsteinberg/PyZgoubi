@@ -186,16 +186,16 @@ def define_file(fname, allow_lookup=False):
 			nbytes = 4
 		if rtype == "string":
 			if rname == "KLEY":
-				ntype = "a10"
+				ntype = "U10"
 				nbytes = 10
 			if rname == "LABEL1":
-				ntype = "a8"
+				ntype = "U8"
 				nbytes = 8
 			if rname == "LABEL2":
-				ntype = "a8"
+				ntype = "U8"
 				nbytes = 8
 			if rname == "LET":
-				ntype = "a1"
+				ntype = "U1"
 				nbytes = 1
 		byte_count += nbytes
 
@@ -207,11 +207,11 @@ def define_file(fname, allow_lookup=False):
 	
 	# Zgoubi SVN r290 switch labels from a8 to a10
 	if file_mode == 'binary' and byte_count != record_length:
-		types = ['a10' if t == 'a8' else t  for t in types]
+		types = ['U10' if t == 'U8' else t  for t in types]
 
 	# If it still does not fit, try a20, as of Zgoubi SVN r665
 	if file_mode == 'binary' and byte_count != record_length:
-		types = ['a20' if t == 'a8' else t  for t in types]
+		types = ['U20' if t == 'U8' else t  for t in types]
 
 	
 	definition =  {'names':names, 'types':types, 'units':units, 'file_mode':file_mode, 'file_type':file_type, 'signature':signature}
@@ -284,6 +284,13 @@ def read_file(fname):
 		head_len = file_def["header_length"]
 		fh.seek(head_len)
 		
+		# frombuffer copies raw data from disk to array
+		# so must read labels into ascii field, then us astype to
+		# unicode format
+		conv = lambda t: "a"+t[1:] if t[0] == "U" else t
+		bin_def_types = [conv(t) for t in file_def['types']]
+		bin_data_type = list(zip(file_def['names'], bin_def_types))
+
 		#types = file_def['types']
 		#types = listreplace(types, 'f8', 'd')
 		#types = listreplace(types, 'i4', 'i')
@@ -308,7 +315,9 @@ def read_file(fname):
 
 			rec = full_rec[4:-4]
 			if rec == "": break
-			file_data2[n] = numpy.frombuffer(rec, dtype=data_type)
+			file_data2[n] = numpy.frombuffer(rec, dtype=bin_data_type)
+		# decode the ascii into unicode
+		file_data2 = file_data2.astype(data_type)
 
 	return file_data2
 
