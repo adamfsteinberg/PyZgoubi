@@ -7,7 +7,7 @@ energy = 1e6
 
 b_orig = Bunch.gen_halo_x_xp_y_yp(1e3, 1e-3, 1e-3, 4,5,1e-3, 2e-2)
 
-b_orig_4d = numpy.column_stack([b_orig.particles()[col] for col in 'YTZP'])
+b_orig_4d = b_orig.particles()[["Y", "T", "Z", "P"]]
 
 
 ob = OBJET2()
@@ -34,20 +34,16 @@ add(END())
 res = run(xterm=False)
 
 if binary:
-	fai_data =  res.get_track('bfai', ['Y','T','Z','P'])
+	fai_data =  res.get_all('bfai')[['Y','T','Z','P']]
 else:
-	fai_data =  numpy.array(res.get_track('fai', ['Y','T','Z','P'])) / [100, 1000, 100, 1000]
+	fai_data =  res.get_all('fai')[['Y','T','Z','P']]
+	fai_data["Y"] /= 100
+	fai_data["T"] /= 1000
+	fai_data["Z"] /= 100
+	fai_data["P"] /= 1000
 
-
-
-#print b_orig_4d
-#print fai_data
-
-errors = abs((b_orig_4d - fai_data) / numpy.maximum(b_orig_4d, fai_data))
-#print errors
-print("mean errors in YTZP")
-print(errors.mean(0))
-assert(numpy.all(errors.mean(0) < [1e-13, 2e-13, 1e-13, 2e-13])), "error to big"
-
-
-
+for key in ['Y','T','Z','P']:
+	errors = abs((b_orig_4d[key] - fai_data[key]) / numpy.maximum(b_orig_4d[key], fai_data[key]))
+	print("mean errors in YTZP")
+	print(errors.mean(0))
+	assert(errors.mean(0) < [1e-12]), "error to big for %s"%key
