@@ -939,7 +939,15 @@ class Results(object):
 		# also select only particles at FAISTORE with matching end_label
 		if end_label:
 			end_label = end_label.ljust(last_lap.dtype['element_label1'].itemsize) # pad to match zgoubi, as of Zgoubi SVN r290 this has changed from 8 to 10
-			last_lap = last_lap[last_lap['element_label1'] == end_label]
+			last_lap = last_lap[numpy.char.strip(last_lap['element_label1']) == end_label.strip()]
+
+		if(last_lap.size == 0):
+			zlog.warn("last lap of %s empty. returning empty bunch", file)
+			empty_bunch = zgoubi.bunch.Bunch(nparticles=0, rigidity=0)
+			if old_bunch is not None:
+				empty_bunch.mass = old_bunch.mass
+				empty_bunch.charge = old_bunch.charge
+				return empty_bunch
 
 		#print last_lap[:10]['BORO']
 		#print last_lap[:10]['D-1']
