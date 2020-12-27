@@ -132,7 +132,7 @@ QD3     46.400000   3.573126  -0.577021  15.957381   2.477719  """
 chris_data = [x.split() for x in  chris_data_raw.split('\n')]
 
 zgoubi_data_t = [twiss_profiles['label'],twiss_profiles['s'],twiss_profiles['beta_y'],twiss_profiles['alpha_y'],twiss_profiles['beta_z'],twiss_profiles['alpha_z']]
-zgoubi_data = zip(*zgoubi_data_t)
+zgoubi_data = list(zip(*zgoubi_data_t))
 
 cd = chris_data
 

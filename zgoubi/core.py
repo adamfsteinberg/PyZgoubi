@@ -35,7 +35,7 @@ import struct
 from glob import glob
 import copy
 import threading
-import Queue
+import queue
 import subprocess
 import weakref
 import warnings
@@ -65,8 +65,7 @@ from zgoubi.elements import *
 
 from zgoubi.settings import zgoubi_settings
 
-# in python3 we will be able to use zlog.setLevel(zgoubi_settings['log_level']), can be changed in pyzgoubi too
-zlog.setLevel(logging._levelNames[zgoubi_settings['log_level']])
+zlog.setLevel(zgoubi_settings['log_level'])
 
 sys.setcheckinterval(10000)
 
@@ -454,8 +453,8 @@ class Line(object):
 		
 	def track_bunch_mt(self, bunch, n_threads=4, max_particles=None, binary=False, **kwargs):
 		"This function should be used identically to the track_bunch function, apart from the addition of the n_threads argument. This will split the bunch into several slices and run them simultaneously. Set n_threads to the number of CPU cores that you have. max_particle can be set to limit how many particles are sent at a time."
-		in_q = Queue.Queue()
-		out_q = Queue.Queue()
+		in_q = queue.Queue()
+		out_q = queue.Queue()
 		if max_particles is None:
 			max_particles = 1e3
 
@@ -464,7 +463,7 @@ class Line(object):
 			while True:
 				try:
 					start_index, work_bunch = in_q.get(block=True, timeout=0.1)
-				except Queue.Empty:
+				except queue.Empty:
 					#print "get() timed out in thread", name
 					if stop_flag.is_set():
 						#print "exiting thread", name
@@ -940,7 +939,15 @@ class Results(object):
 		# also select only particles at FAISTORE with matching end_label
 		if end_label:
 			end_label = end_label.ljust(last_lap.dtype['element_label1'].itemsize) # pad to match zgoubi, as of Zgoubi SVN r290 this has changed from 8 to 10
-			last_lap = last_lap[last_lap['element_label1'] == end_label]
+			last_lap = last_lap[numpy.char.strip(last_lap['element_label1']) == end_label.strip()]
+
+		if(last_lap.size == 0):
+			zlog.warn("last lap of %s empty. returning empty bunch", file)
+			empty_bunch = zgoubi.bunch.Bunch(nparticles=0, rigidity=0)
+			if old_bunch is not None:
+				empty_bunch.mass = old_bunch.mass
+				empty_bunch.charge = old_bunch.charge
+				return empty_bunch
 
 		#print last_lap[:10]['BORO']
 		#print last_lap[:10]['D-1']
@@ -982,12 +989,12 @@ class Results(object):
 		
 		fh = self.res_fh()
 		while True:
-			try: line = fh.next()
-			except StopIteration: break
+			line = fh.readline()
+			if not line: break
 			if line.startswith("******"): # find start of an output block
 				found_output = True
-				try: element_line = fh.next()
-				except StopIteration: break
+				element_line = fh.readline()
+				if not element_line: break
 				if element_line.strip() == "": continue
 
 				# find element type

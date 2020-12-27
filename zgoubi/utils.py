@@ -16,7 +16,7 @@ from zgoubi.exceptions import *
 from zgoubi.rel_conv import *
 import itertools
 from zgoubi.core import zlog, dep_warn, Line
-from StringIO import StringIO
+from io import StringIO
 import copy
 
 # use these to convert things to metres and tesla
@@ -691,12 +691,12 @@ def get_twiss_profiles(line, file_result=None, input_twiss_parameters=None, calc
 	#try to get azimuthal coordinate X
 	try:
 		X1 = r.get_track('plt','X')
-		X = map(list, zip(*X1))[0]
+		X = list(map(list, zip(*X1)))[0]
 		X_exists = True
 	except IOError:
 		pass
 
-	transpose_plt_track = map(list, zip(*plt_track))
+	transpose_plt_track = list(map(list, zip(*plt_track)))
 	track_tag = transpose_plt_track[0]
 	D0 = transpose_plt_track[1]
 	Y0 = transpose_plt_track[2]
@@ -1027,7 +1027,7 @@ def get_twiss_profiles(line, file_result=None, input_twiss_parameters=None, calc
 		else:
 		    plt_track_disp = r.get_track('fai', ['LET', 'Y', 'T', 'Z', 'P', 'S'])
 
-		transpose_plt_track_disp = map(list, zip(*plt_track_disp))
+		transpose_plt_track_disp = list(map(list, zip(*plt_track_disp)))
 		y_disp = transpose_plt_track_disp[1]
 		t_disp = transpose_plt_track_disp[2]
 		z_disp = transpose_plt_track_disp[3]
@@ -1036,7 +1036,7 @@ def get_twiss_profiles(line, file_result=None, input_twiss_parameters=None, calc
 		
 		if X_exists and interpolate:
 			X1d = r.get_track('plt','X')
-			x_disp = map(list, zip(*X1d))[0]
+			x_disp = list(map(list, zip(*X1d)))[0]
 			y_disp = numpy.interp(X_alltracks_m[0], x_disp, y_disp)
 			t_disp = numpy.interp(X_alltracks_m[0], x_disp, t_disp)
 			z_disp = numpy.interp(X_alltracks_m[0], x_disp, z_disp)
@@ -1810,7 +1810,7 @@ def scaling_to_poly(b0, k, r0, rmin, rmax, step, order=5):
 
 	x = numpy.arange(rmin, rmax, step)
 	def scalelaw(a): return b0*pow((r0+a)/r0, k)
-	By = map(scalelaw, x)
+	By = list(map(scalelaw, x))
 	polyval = numpy.polyfit(x, By, order)
 	vals = polyval.tolist()
 	vals.reverse()

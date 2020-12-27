@@ -15,9 +15,9 @@ add(d1, q1, d2, q2)
 add(FAISCNL(FNAME='zgoubi.fai')) # record point
 add(END())
 
-print output() # file fed to zgoubi (zgoubi.dat)
+print(output()) # file fed to zgoubi (zgoubi.dat)
 run() # run the line in zgoubi
-print res() # show the zgoubi.res file
-print get_all('fai') # so the data recorded with FAISCNL
+print(res()) # show the zgoubi.res file
+print(get_all('fai')) # so the data recorded with FAISCNL
 
 

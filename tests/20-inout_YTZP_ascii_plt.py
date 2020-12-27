@@ -7,7 +7,7 @@ energy = 1e6
 
 b_orig = Bunch.gen_halo_x_xp_y_yp(1e3, 1e-3, 1e-3, 4,5,1e-3, 2e-2)
 
-b_orig_4d = numpy.column_stack([b_orig.particles()[col] for col in 'YTZP'])
+b_orig_4d = b_orig.particles()[["Y", "T", "Z", "P"]]
 
 
 ob = OBJET2()
@@ -38,28 +38,22 @@ add(END())
 res = run(xterm=False)
 
 if binary:
-	plt_data =  res.get_track('bplt', ['Y','T','Z','P'])
+	plt_data =  res.get_all('bplt')[['Y','T','Z','P']]
 else:
-	plt_data =  numpy.array(res.get_track('plt', ['Y','T','Z','P'])) / [100, 1000, 100, 1000]
-
-
+	plt_data =  res.get_all('plt')[['Y','T','Z','P']]
+	plt_data["Y"] /= 100
+	plt_data["T"] /= 1000
+	plt_data["Z"] /= 100
+	plt_data["P"] /= 1000
 
 
 #select the points from entrance of the magnet
 plt_data = plt_data[::3]
 
-#print
-#print b_orig_4d
-#print
-#print plt_data
-#print
 
-
-errors = abs((b_orig_4d - plt_data) / numpy.maximum(b_orig_4d, plt_data))
-#print errors
-print("mean errors in YTZP")
-print(errors.mean(0))
-assert(numpy.all(errors.mean(0) < [1e-13, 2e-13, 1e-13, 2e-13])), "error to big"
-
-
+for key in ['Y','T','Z','P']:
+	errors = abs((b_orig_4d[key] - plt_data[key]) / numpy.maximum(b_orig_4d[key], plt_data[key]))
+	print("mean errors in YTZP")
+	print(errors.mean(0))
+	assert(errors.mean(0) < [1e-12]), "error to big for %s"%key
 

@@ -1,4 +1,4 @@
-print "running emma example"
+print("running emma example")
 
 emma = Line('emma')
 
@@ -53,8 +53,8 @@ rigidity = ke_to_rigidity(10e6, 0.51099892e6)
 ob.set(BORO=-rigidity)
 ob.add(Y=0, T=0, D=1)
 
-print emma.output()
+print(emma.output())
 res = emma.run(xterm = True)
-print res.res()
+print(res.res())
 res.clean()
 

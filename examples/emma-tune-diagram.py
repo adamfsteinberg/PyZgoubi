@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-print "running emma-tune-diagram example"
+print("running emma-tune-diagram example")
 
 #Calculate cell tune of the EMMA FFAG at various momenta and plot on tune diagram including resonance lines up to third order
 

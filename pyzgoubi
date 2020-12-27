@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 #		pyzgoubi - python interface to zgoubi
 #		Copyright 2008 - 2019 Sam Tygier <Sam.Tygier@hep.manchester.ac.uk>
@@ -48,6 +48,11 @@ from zgoubi import gcp
 import logging
 
 sys.path.append(os.getcwd())
+
+def execfile(fname):
+	with open(fname) as f:
+		code = compile(f.read(), fname, 'exec')
+		exec(code)
 
 # create a set of functions that work on default_line and default_results objects
 # these will make it simpler to run simple simulations
@@ -164,7 +169,7 @@ def show_version():
 	print("Default Zgoubi path", zgoubi_settings['zgoubi_path'])
 	tmpdir = tempfile.mkdtemp()
 	try:
-		output = subprocess.Popen([zgoubi_settings['zgoubi_path']], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=tmpdir).communicate()[0]
+		output = subprocess.Popen([zgoubi_settings['zgoubi_path']], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=tmpdir, encoding="utf-8").communicate()[0]
 		for line in output.split('\n'):
 			if "version" in line.lower():
 				print(line.strip())
@@ -223,7 +228,7 @@ def show_version():
 if __name__ == '__main__':
 	try:
 		opts, args = getopt.getopt(sys.argv[1:], "hi", ["help", "version", "zgoubi=", "debug", "log_level=", "log-level=" ,"install-zgoubi", "profile"])
-	except getopt.GetoptError, err:
+	except getopt.GetoptError as err:
 		print(str(err))
 		_show_usage()
 		sys.exit(1)
@@ -308,11 +313,11 @@ if __name__ == '__main__':
 		pyzgoubi_profile.disable()
 		pyzgoubi_profile.dump_stats("prof.log")
 	
+	left_overs = list(locals().values())
+	for left_over in left_overs:
+		if isinstance(left_over, Results):
+			left_over.clean()
 
-	for left_over in locals().values():
-		if "Result"  in str(type(left_over)).split("'")[1]:
-			del left_over
-	
 
 	# uncomment to enable list leftover objects for memory debugging
 	#import gc

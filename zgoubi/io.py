@@ -87,10 +87,7 @@ def write_fortran_record(fh, record):
 	"Write a record, adds record length to start and end"
 	rec_len = len(record)
 	rec_len_r = struct.pack("i", rec_len)
-	fh.write(rec_len_r+record+rec_len_r)
-	#fh.write(record)
-	#fh.write(rec_len_r)
-
+	fh.write(rec_len_r+record.encode("ASCII")+rec_len_r)
 
 
 def define_file(fname, allow_lookup=False):
@@ -99,21 +96,22 @@ def define_file(fname, allow_lookup=False):
 	fh.seek(0)
 	file_size = os.path.getsize(fh.name)
 
-	first_bytes = fh.read(30)
-	# zgoubi's ascii files start with '# '
-	# the binary files start with an int that tells you the length of the next record
-	
-	if first_bytes[0:2] == "# ":
-		file_mode = 'ascii'
-	else:
+	try:
+		first_bytes = fh.read(30)
+		# zgoubi's ascii files start with '# '
+		# the binary files start with an int that tells you the length of the next record
+		if first_bytes[0:2] == "# ":
+			file_mode = 'ascii'
+		else:
+			file_mode = 'binary'
+	except UnicodeDecodeError:
 		file_mode = 'binary'
-		if sys.platform == "win32":
-			# reopen as binary
-			fh = open_file_or_name(fname, mode="rb")
-			fh.seek(0)
-			first_bytes = fh.read(30)
-			
 	
+	if file_mode == 'binary':
+		fh = open_file_or_name(fname, mode="rb")
+		fh.seek(4) # record header
+		first_bytes = fh.read(30).decode("ASCII") #  record contents is ascii
+
 	if "COORDINATES" in first_bytes:
 		file_type = "fai"
 	elif "TRAJECTORIES" in first_bytes:
@@ -125,7 +123,7 @@ def define_file(fname, allow_lookup=False):
 	if file_mode == 'ascii':
 		header = [fh.readline() for x in range(4)]
 	else:
-		header = [read_fortran_record(fh) for x in range(4)]
+		header = [read_fortran_record(fh).decode("ASCII") for x in range(4)]
 	
 	if header[2].startswith("..."):
 		raise OldFormatError("This is an old format that does not define column headings")
@@ -143,7 +141,7 @@ def define_file(fname, allow_lookup=False):
 
 	
 	signature = file_mode + file_type + header[2] + header[3] + str(record_len)
-	signature = hashlib.md5(signature).hexdigest()	
+	signature = hashlib.md5(signature.encode()).hexdigest()
 
 	if allow_lookup:
 		try:
@@ -188,16 +186,16 @@ def define_file(fname, allow_lookup=False):
 			nbytes = 4
 		if rtype == "string":
 			if rname == "KLEY":
-				ntype = "a10"
+				ntype = "U10"
 				nbytes = 10
 			if rname == "LABEL1":
-				ntype = "a8"
+				ntype = "U8"
 				nbytes = 8
 			if rname == "LABEL2":
-				ntype = "a8"
+				ntype = "U8"
 				nbytes = 8
 			if rname == "LET":
-				ntype = "a1"
+				ntype = "U1"
 				nbytes = 1
 		byte_count += nbytes
 
@@ -209,11 +207,11 @@ def define_file(fname, allow_lookup=False):
 	
 	# Zgoubi SVN r290 switch labels from a8 to a10
 	if file_mode == 'binary' and byte_count != record_length:
-		types = ['a10' if t == 'a8' else t  for t in types]
+		types = ['U10' if t == 'U8' else t  for t in types]
 
 	# If it still does not fit, try a20, as of Zgoubi SVN r665
 	if file_mode == 'binary' and byte_count != record_length:
-		types = ['a20' if t == 'a8' else t  for t in types]
+		types = ['U20' if t == 'U8' else t  for t in types]
 
 	
 	definition =  {'names':names, 'types':types, 'units':units, 'file_mode':file_mode, 'file_type':file_type, 'signature':signature}
@@ -234,8 +232,8 @@ def read_file(fname):
 	"Read a zgoubi output file. Return a numpy array with named column headers. The format is automatically worked out from the header information."
 	file_def = define_file(fname)
 
-	data_type = zip(file_def['names'], file_def['types'])
-	if file_def["file_mode"] == "binary" and sys.platform == "win32":
+	data_type = list(zip(file_def['names'], file_def['types']))
+	if file_def["file_mode"] == "binary":
 		fh = open_file_or_name(fname, mode="rb")
 	else:
 		fh = open_file_or_name(fname)
@@ -286,6 +284,13 @@ def read_file(fname):
 		head_len = file_def["header_length"]
 		fh.seek(head_len)
 		
+		# frombuffer copies raw data from disk to array
+		# so must read labels into ascii field, then us astype to
+		# unicode format
+		conv = lambda t: "a"+t[1:] if t[0] == "U" else t
+		bin_def_types = [conv(t) for t in file_def['types']]
+		bin_data_type = list(zip(file_def['names'], bin_def_types))
+
 		#types = file_def['types']
 		#types = listreplace(types, 'f8', 'd')
 		#types = listreplace(types, 'i4', 'i')
@@ -310,7 +315,9 @@ def read_file(fname):
 
 			rec = full_rec[4:-4]
 			if rec == "": break
-			file_data2[n] = numpy.frombuffer(rec, dtype=data_type)
+			file_data2[n] = numpy.frombuffer(rec, dtype=bin_data_type)
+		# decode the ascii into unicode
+		file_data2 = file_data2.astype(data_type)
 
 	return file_data2
 

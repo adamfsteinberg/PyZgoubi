@@ -19,7 +19,7 @@ def assert_eval_raises(code, loc=None, exc="any"):
 		loc = locals()
 	try:
 		exec(code, loc)
-	except Exception,  inst:
+	except Exception as inst:
 		raised_exc = inst
 	else:
 		raised_exc = None

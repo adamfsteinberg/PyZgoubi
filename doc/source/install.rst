@@ -13,30 +13,28 @@ PyZgoubi follows standard Python install methods, but requires a few packages to
 General Requirements
 ^^^^^^^^^^^^^^^^^^^^
 
-PyZgoubi requires Python 2.7. It also requires the python math and science packages, Numpy and SciPy. For some graphical functions it uses Matplotlib.
+PyZgoubi requires Python 3.7 or newer. It also requires the python math and science packages, Numpy and SciPy. For some graphical functions it uses Matplotlib.
 
 Linux
 """""
-On linux Python 2 is usually already installed. Other packages can be installed using the package manager, for example on Fedora/Red Hat/Scientific::
+On linux Python 3 is usually already installed. Other packages can be installed using the package manager, for example on Fedora/Red Hat/Centos::
 
-  sudo yum install python2-numpy python2-scipy python2-matplotlib
+  sudo dnf install python3-numpy python3-scipy python3-matplotlib
 
 Or on Ubuntu/Debian::
 
-  sudo apt-get install python-numpy python-scipy python-matplotlib
+  sudo apt-get install python3-numpy python3-scipy python3-matplotlib
 
 MacOS X
 """""""
 
-On MacOS X Python 2 is already installed. The simplest method to install the scientific packages is with the `Enthought Canopy distribution <https://enthought.com/#canopy>`_
+On MacOS X the simplest method to install the python and the scientific packages is with Miniconda from https://docs.conda.io/en/latest/miniconda.html
 
 
 Windows
 """""""
 
-The simplest method to install python and the scientific packages is with the `Enthought Canopy distribution <https://enthought.com/#canopy>`_
-
-Or the packages can be installed from the `SciPy website <http://www.scipy.org/>`_
+On Windows the simplest method to install the python and the scientific packages is with Miniconda from https://docs.conda.io/en/latest/miniconda.html
 
 
 

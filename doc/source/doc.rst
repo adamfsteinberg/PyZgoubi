@@ -4,9 +4,7 @@
 PyZgoubi Documentation
 ======================
 
-The latest version of PyZgoubi and this document can be found at http://www.hep.manchester.ac.uk/u/samt/pyzgoubi/
-
-
+The latest version of PyZgoubi and this document can be found at http://pyzgoubi.org/
 
 Introduction
 ------------
@@ -37,10 +35,10 @@ Put the following in a text file named quickstart.py::
     add(FAISCNL(FNAME='zgoubi.fai')) # record point
     add(END())
 
-    print output() # file fed to zgoubi (zgoubi.dat)
+    print(output()) # file fed to zgoubi (zgoubi.dat)
     run() # run the line in zgoubi
-    print res() # show the zgoubi.res file
-    print get_all('fai') # so the data recorded with FAISCNL
+    print(res()) # show the zgoubi.res file
+    print(get_all('fai')) # so the data recorded with FAISCNL
 
 The file can also be found in examples/quickstart.py
 
@@ -69,10 +67,10 @@ For more advance use it may be better store the |Line| with a name, this allows 
     myline.add(FAISCNL(FNAME='zgoubi.fai')) # record point
     myline.add(END())
 
-    print myline.output() # file fed to zgoubi (zgoubi.dat)
+    print(myline.output()) # file fed to zgoubi (zgoubi.dat)
     myresults = myline.run() # run the line in zgoubi
-    print myresults.res() # show the zgoubi.res file
-    print myresults.get_all('fai') # so the data recorded with FAISCNL 
+    print(myresults.res()) # show the zgoubi.res file
+    print(myresults.get_all('fai')) # so the data recorded with FAISCNL
 
 Generating zgoubi.dat files
 ---------------------------
@@ -162,7 +160,7 @@ All these instructions can be put in a text file and run using the command pyzgo
         ob.set(BORO=-rigidity)
         ob.add(Y=0, T=0, D=1)
 
-        print emma.output()
+        print(emma.output())
 
 This can be run with the command::
 
@@ -191,78 +189,12 @@ The IMMORTAL_MUON is a muon with an infinite lifetime, for use when decay is not
 The masses and charges are defined in zgoubi/constants.py
 
 
-Defining Elements
+Advanced Elements
 -----------------
 
-There are two ways Elements can be defined in pyzgoubi. Most Elements are simple, they have a static list of parameters. Some have some extra complexity, for example different parameters depending on options, sections repeated N times. These elements can be defined using a simple syntax, which is then converted into python code. More complex elements must be written in python.
+Some Zgoubi element can represent a set of magnets, this can be useful defining doublets and triplets.
 
-
-The simple elements are defined in defs/simple_elements.defs. For each element there is a number of lines of text, delimited by blank lines. Comments can be put after a '#' character. The first line gives the name of the class, this is the name you use in the input file. The second line gives the name used by Zgoubi, this must match the Zgoubi manual. Then follows a line for each line of output in the zgoubi.dat file; first the names of the parameters, then a ':', then the types. For example::
-
-
-    BEND
-    BEND
-    IL : I
-    XL, Sk, B1 : 3E
-    X_E, LAM_E, W_E : 3E
-    N, C_0, C_1, C_2, C_3, C_4, C_5 : I,6E
-    X_S, LAM_S, W_S : 3E
-    NS, CS_0, CS_1, CS_2, CS_3, CS_4, CS_5 : I,6E
-    XPAS: X
-    KPOS, XCE, YCE, ALE : I,3E
-
-The types can be:
-
-- I : integer
-- E : real (floating point)
-- Ax : string with up to x characters
-- X : special type for XPAS. Can be integer, or group of 3 integers e.g. (10,20,10)
-
-The type can be followed by a number for several parameters of the same type.
-
-If the parameters used vary depending on the value of another option the following syntax can be used::
-
-    CAVITE
-    CAVITE
-    IOPT : I
-    !IOPT==0
-    X, X : 2E
-    !IOPT==1
-    L, h : 2E
-    V, X : 2E
-    !IOPT==2
-    L, h : 2E
-    V, sig_s : 2E
-    !IOPT==3
-    X,X : 2E
-    V, sig_s : 2E
-
-Here the value of IOPT switches the element to output different parameters. (See the zgoubi manual's description of CAVITE for more info).
-
-
-Elements with a looped section can be defined as follows::
-
-    FFAG
-    FFAG
-    IL : I
-    N, AT, RM: I,2E
-    !N*{
-    ACN, DELTA_RM, BZ_0, K: 4E
-    G0_E, KAPPA_E: 2E
-    NCE, CE_0, CE_1, CE_2, CE_3, CE_4, CE_5, SHIFT_E: I,7E
-    OMEGA_E, THETA_E, R1_E, U1_E, U2_E, R2_E: 6E
-    G0_S, KAPPA_S: 2E
-    NCS, CS_0, CS_1, CS_2, CS_3, CS_4, CS_5, SHIFT_S: I,7E
-    OMEGA_S, THETA_S, R1_S, U1_S, U2_S, R2_S: 6E
-    G0_L, KAPPA_L: 2E
-    NCL, CL_0, CL_1, CL_2, CL_3, CL_4, CL_5, SHIFT_L: I,7E
-    OMEGA_L, THETA_L, R1_L, U1_L, U2_L, R2_L: 6E
-    !}
-    KIRD, RESOL: 2I
-    XPAS: E
-    KPOS, RE, TE, RS, TS: I,4E
-
-Here the section between the braces is repeated. These elements are used slightly differently to simpler elements. Then non looping section is defined normally.::
+These elements are used slightly differently to simpler elements. The non looping section is defined normally.::
 
 
     triplet = FFAG('triplet', IL=0, AT=10 ... )
@@ -277,11 +209,6 @@ N gets automatically set. All the looped parts can be removed using::
 
     triplet.clear()
 
-When pyzgoubi runs it searches the defs folder for files ending in .defs. Additional files can be added to the extra_defs_files list in zgoubi_settings.py. If any of these files have been modified then they are reread and the defs.py is regenerated.
-
-
-The Elements that cannot be defined in this way must be put into the static_defs.py file. They must be classes that have an output() method, which generates the code needed for the zgoubi.dat file.
-
 
 There is also a FAKE_ELEM element. This allows you to put arbitrary text into the zgoubi.dat file. It is useful for using an Zgoubi element that pyzgoubi does not have a definition for. For example::
 
@@ -290,7 +217,6 @@ There is also a FAKE_ELEM element. This allows you to put arbitrary text into th
     """
     change = FAKE_ELEM(change_txt)
     line.add(change)
-
 
 
 Available Elements
@@ -631,6 +557,17 @@ Upgrade Notes
 
 Although it would be nice to have perfect backwards compatibility that sometimes interferes with progress, and things have to break. There should be no breaks between a version X.Y.Z and X.Y.Z+1, but there can be between X.Y.Z and X.Y+1.0.
 
+0.8.x
+"""""
+
+PyZgoubi 0.8 uses Python 3 and no longer support Python 2.
+
+If you are porting old pyzgoubi scripts you may find the following document useful https://docs.python.org/3/howto/pyporting.html
+
+In many cases you may be able to do the conversion automatically with the 2to3 tool.
+
+0.8 also uses yaml definitions of elements, so it is not currently possible for the user to add local element definitions. Instead new elements should be added to the https://github.com/PyZgoubi/zgoubi-metadata project.
+
 0.3.x to 0.4.x
 """"""""""""""
 
@@ -707,7 +644,7 @@ Printing the line instance will show what elements it contains::
 	my_line.add( QUADRUPO( ... ) )
 	my_line.add( DRIFT( ... ) )
 	...
-	print my_line
+	print(my_line)
 
 
 Element output
@@ -720,7 +657,7 @@ Check what an element is outputting to the zgoubi.dat file::
 
 or the whole line::
 	
-	print my_line.output
+	print(my_line.output)
 
 If they are not what you expect have a look in PyZgoubi's definition files.
 
@@ -730,7 +667,7 @@ Res file
 Read the zgoubi.res file. It shows how Zgoubi interpreted the zgoubi.dat file::
 
 	results = my_line.run()
-	print results.res()
+	print(results.res())
 
 Check all the units, Zgoubi uses a range of different units.
 

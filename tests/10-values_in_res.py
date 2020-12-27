@@ -28,7 +28,7 @@ for x in range(3):
 	print(repr(tv[x]), bits[x], error)
 	if error > 1e-12:
 		print("value does not match to 12 decimals")
-		raise ValueError, "error to big: %s"  % error
+		raise ValueError("error to big: %s" % error)
 
 
 run()
@@ -67,7 +67,7 @@ for x in range(3):
 	print(repr(tv[x]), rv[x], error)
 	if error > 1e-3:
 		print("value does not match to 3 decimals")
-		raise ValueError, "error to big: %s"  % error
+		raise ValueError("error to big: %s" % error)
 
 
 
