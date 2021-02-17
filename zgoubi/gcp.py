@@ -1539,7 +1539,7 @@ def plot_dynamic_aperture(cell, data, particle, npass, output_prefix="results/da
 			#pyplot.plot(fai_data['Y'], fai_data['T'], ','+color)
 
 		import pickle
-		pickle.dump(tracks, open('%s_%s.pickle'%(output_prefix, particle_ke), "w"))
+		pickle.dump(tracks, open('%s_%s.pickle'%(output_prefix, particle_ke), "wb"))
 
 		print("dynamic aperture", numpy.median(data[n]['DA']))
 		for fai_data,emit,stab in tracks:
